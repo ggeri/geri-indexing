@@ -20,7 +20,7 @@ private static final int NUM_IMAGES_TRAINING = 10200;
 private static final int NUM_IMAGES_POPULATING = 10200; 	// set heap to 6144max & w/ flag -XX:-UseGCOverheadLimit
 private static final int NUM_RUNS = 100;
 	
-	public static void main(String[] args)
+	public static void main(String[] args) 
 	{	
 		String stars = "\n**************************************************************************************\n";
 				
@@ -295,6 +295,7 @@ private static final int NUM_RUNS = 100;
 			ImageScorePair pair1 = null, pair2 = null, pair3 = null;
 			for(int i = 0; i < votes.length; i++)
 			{
+				// add change here
 				if(i != queryImage) // we take the query image out of the set
 				{
 					ImageScorePair pair = new ImageScorePair(i, votes[i]);
