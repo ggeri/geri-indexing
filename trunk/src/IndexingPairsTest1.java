@@ -18,7 +18,7 @@ private static final int NUM_LEAFS_IN_TRAINED_TREE = 1000000;
 private static final int NUM_PTS_TRAINING = 10000000;	
 private static final int NUM_IMAGES_TRAINING = 10200;
 private static final int NUM_IMAGES_POPULATING = 10200; 	// set heap to 6144max & w/ flag -XX:-UseGCOverheadLimit
-private static final int NUM_RUNS = 1; //100;
+private static final int NUM_RUNS = 100;
 	
 	public static void main(String[] args) 
 	{	
@@ -315,8 +315,7 @@ private static final int NUM_RUNS = 1; //100;
 				{
 					ImageScorePair pair = new ImageScorePair(i, votes[i]);
 					
-					System.out.println("queryPair has " + votes[i] + " scores and is located at position " + i);
-					System.out.println("i = " + i + " and queryImage = " + queryImage);
+					System.out.println("queryPair has " + votes[i] + " scores and is located at position " + i);					
 					
 					scoresList.add(pair);
 					queryPair = pair;
@@ -333,13 +332,15 @@ private static final int NUM_RUNS = 1; //100;
 			
 			// get and print the rank of queryPair - should be first
 			int queryPairRank = scoresListSorted.indexOf(queryPair);
-			System.out.println("Rank of the queryPair - it should be first: " + queryPairRank);
+			System.out.println("/nRank of the queryPair - it should be 0: " + queryPairRank);
 			
 			//get and print out the number of votes for the queryPair - it should be equal to the number of keypoints in the query image
 			int queryImageScore = queryPair.getScore();
-			System.out.println("The score of the queryImage - it should be equal to the number of keypoints in the query image " + queryImageScore);
+			
+			// check how many votes query image gets
 			short[] dataSet = KeypointPairsExtraction.getDataSet(queryImage);
-			System.out.println("The number of keypoint pairs in queryImage is " + (dataSet.length / Keypoint.DESCRIPTOR_LENGTH));
+			System.out.println("The score of the queryImage: " + queryImageScore + 
+					" and the number of keypoint pairs in queryImage is: " + (dataSet.length / Keypoint.DESCRIPTOR_LENGTH));
 			
 			
 			// Now for each of the remaining three images, we find the reciprocals and add them to the reciprocal set
