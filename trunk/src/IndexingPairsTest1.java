@@ -18,7 +18,7 @@ private static final int NUM_LEAFS_IN_TRAINED_TREE = 1000000;
 private static final int NUM_PTS_TRAINING = 10000000;	
 private static final int NUM_IMAGES_TRAINING = 10200;
 private static final int NUM_IMAGES_POPULATING = 10200; 	// set heap to 6144max & w/ flag -XX:-UseGCOverheadLimit
-private static final int NUM_RUNS = 100;
+private static final int NUM_RUNS = 1; //100;
 	
 	public static void main(String[] args) 
 	{	
@@ -332,6 +332,12 @@ private static final int NUM_RUNS = 100;
 			// get and print the rank of queryPair - should be first
 			int queryPairRank = scoresListSorted.indexOf(queryPair);
 			System.out.println("Rank of the queryPair - it should be first: " + queryPairRank);
+			
+			//get and print out the number of votes for the queryPair - it should be equal to the number of keypoints in the query image
+			int queryImageScore = queryPair.getScore();
+			System.out.println("The score of the queryImage - it should be equal to the number of keypoints in the query image " + queryImageScore);
+			short[] dataSet = KeypointPairsExtraction.getDataSet(queryImage);
+			System.out.println("The number of keypoint pairs in queryImage is " + (dataSet.length / Keypoint.DESCRIPTOR_LENGTH));
 			
 			
 			// Now for each of the remaining three images, we find the reciprocals and add them to the reciprocal set
