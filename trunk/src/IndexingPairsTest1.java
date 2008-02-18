@@ -363,8 +363,7 @@ private static final int NUM_RUNS = 100;
 			double pair1Precision = 1.0/pair1Rank;
 			double pair2Precision = 2.0/pair2Rank;
 			double pair3Precision = 3.0/pair3Rank;		
-			
-			System.out.println("\nLength of scoresListSorted = " + scoresListSorted.size());
+						
 			System.out.println("pair1rank = " + pair1Rank + ", pair2rank = " + pair2Rank + ", pair3rank = " + pair3Rank);
 			
 			reciprocals[index] = pair1Precision;
