@@ -283,9 +283,7 @@ private static final int NUM_RUNS = 1; //100;
 			//take one image and query with all the points in it and vote...
 			
 			NumberFormat formatter = new DecimalFormat("00000");
-			String imageFileName = KeypointPairsExtraction.imagePath + "ukbench" + formatter.format(queryImage) + ".pair.obj";							
-			
-			queryImage = queryImage + 4;		
+			String imageFileName = KeypointPairsExtraction.imagePath + "ukbench" + formatter.format(queryImage) + ".pair.obj";														
 		
 			int[] votes = kdTreeInstance.voteForImage(trainedTree, populatedTree, counts, imageFileName, IndexingPairsTest1.NUM_IMAGES_POPULATING); 
 				
@@ -391,6 +389,9 @@ private static final int NUM_RUNS = 1; //100;
 		
 		double avrg = (avrg1 + avrg2 + avrg3) / 3;
 		
-		System.out.println("\n\nOverall average is " + avrg + "\n");						
+		System.out.println("\n\nOverall average is " + avrg + "\n");	
+		
+		// take the next queryImage
+		queryImage = queryImage + 4;
 	}	
 }
