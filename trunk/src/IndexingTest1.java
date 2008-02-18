@@ -147,7 +147,7 @@ private static final int NUM_RUNS = 100;
 		short[] dataSetPopulating = new short[0];
 		// imageIDs
 		//int arraySize = dataSetPopulating.length / KeypointSingleton.DESCRIPTOR_LENGTH;
-		int[] imageIdFromMap = new int[IndexingTest1.NUM_IMAGES_POPULATING];
+		int[] imageIDs = new int[IndexingTest1.NUM_IMAGES_POPULATING];
 		// imageIndeces - used in populating the tree - each index coresponds to an image number and
 		// the element at that position is the index of the first keypt of that image in the dataSetpopulating array
 		int[] imageIndeces = new int[IndexingTest1.NUM_IMAGES_POPULATING];
@@ -173,7 +173,7 @@ private static final int NUM_RUNS = 100;
 					NumberFormat formatter = new DecimalFormat("00000");
 					String objFileName = KeypointsExtraction.imagePath + "ukbench" + formatter.format(image) + ".obj";
 					int imageID = nameIdMap.indexOf(objFileName);
-					imageIdFromMap[image] = imageID;
+					imageIDs[image] = imageID;
 								
 					
 					short[] dataSet = KeypointsExtraction.getDataSet(image);
@@ -258,7 +258,7 @@ private static final int NUM_RUNS = 100;
 					NumberFormat formatter = new DecimalFormat("00000");
 					String objFileName = KeypointsExtraction.imagePath + "ukbench" + formatter.format(image) + ".obj";
 					int imageID = nameIdMap.indexOf(objFileName);
-					imageIdFromMap[image] = imageID;																							
+					imageIDs[image] = imageID;																							
 										
 			  }
 				System.out.println("Number of images used for the dataSetPopulating is " + image);
@@ -269,7 +269,7 @@ private static final int NUM_RUNS = 100;
 		
 		Vector<CountIndexPair> counts = new Vector<CountIndexPair>(IndexingTest1.NUM_LEAFS_IN_TRAINED_TREE);																
 		
-		PopulatedKDTree populatedTree = kdTreeInstance.populateKDTree(trainedTree, dataSetPopulating, imageIdFromMap, imageIndeces, counts);
+		PopulatedKDTree populatedTree = kdTreeInstance.populateKDTree(trainedTree, dataSetPopulating, imageIDs, imageIndeces, counts);
 		
 //		Do NUM_RUNS run, vote and record ranks...		
 		double[] reciprocals = new double[IndexingTest1.NUM_RUNS * 3];
@@ -308,15 +308,15 @@ private static final int NUM_RUNS = 100;
 					{						
 						pair3 = pair;
 					}					
-				}else
-				{
-					ImageScorePair pair = new ImageScorePair(i, votes[i]);
-					
-					System.out.println("queryPair has " + votes[i] + " scores and is located at position " + i);					
-					
-					scoresList.add(pair);
-					queryPair = pair;
-				}		
+				}//else
+//				{
+//					ImageScorePair pair = new ImageScorePair(i, votes[i]);
+//					
+//					System.out.println("queryPair has " + votes[i] + " scores and is located at position " + i);					
+//					
+//					scoresList.add(pair);
+//					queryPair = pair;
+//				}		
 			}
 			
 			// create instance of Scores class with above created scoresList
@@ -327,17 +327,17 @@ private static final int NUM_RUNS = 100;
 			// get the sorted list of scores		
 			LinkedList<ImageScorePair> scoresListSorted = scoresSorted.getScoresList();
 			
-			// get and print the rank of queryPair - should be first
-			int queryPairRank = scoresListSorted.indexOf(queryPair);
-			System.out.println("/nRank of the queryPair - it should be 0: " + queryPairRank);
-			
-			//get and print out the number of votes for the queryPair - it should be equal to the number of keypoints in the query image
-			int queryImageScore = queryPair.getScore();
-			
-			// check how many votes query image gets
-			short[] dataSet = KeypointPairsExtraction.getDataSet(queryImage);
-			System.out.println("The score of the queryImage: " + queryImageScore + 
-					" and the number of keypoint pairs in queryImage is: " + (dataSet.length / Keypoint.DESCRIPTOR_LENGTH));
+//			// get and print the rank of queryPair - should be first
+//			int queryPairRank = scoresListSorted.indexOf(queryPair);
+//			System.out.println("/nRank of the queryPair - it should be 0: " + queryPairRank);
+//			
+//			//get and print out the number of votes for the queryPair - it should be equal to the number of keypoints in the query image
+//			int queryImageScore = queryPair.getScore();
+//			
+//			// check how many votes query image gets
+//			short[] dataSet = KeypointPairsExtraction.getDataSet(queryImage);
+//			System.out.println("The score of the queryImage: " + queryImageScore + 
+//					" and the number of keypoints in queryImage is: " + (dataSet.length / Keypoint.DESCRIPTOR_LENGTH));
 						
 			
 			// Now for each of the remaining three images, we find the reciprocals and add them to the reciprocal set
