@@ -10,8 +10,8 @@ public class IndexingTest1 {
  * true = the tree will be trained 
  * false = the tree will be read from the disk - if there is a file with the specified name on the disk.
  */
-private static boolean train = true;	
-private static boolean populate = true;
+private static boolean train = false;	
+private static boolean populate = false;
 
 private static final int NUM_NODES_IN_TRAINED_TREE = 3 * IndexingTest1.NUM_LEAFS_IN_TRAINED_TREE;
 private static final int NUM_LEAFS_IN_TRAINED_TREE = 1000000;		
