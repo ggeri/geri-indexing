@@ -330,7 +330,7 @@ private static final int NUM_RUNS = 100;
 			
 			// get and print the rank of queryPair - should be first
 			int queryPairRank = scoresListSorted.indexOf(queryPair);
-			System.out.println("/nRank of the queryPair - it should be 0: " + queryPairRank);
+			System.out.println("\nRank of the queryPair - it should be 0: " + queryPairRank);
 			
 			//get and print out the number of votes for the queryPair - it should be equal to the number of keypoints in the query image
 			int queryImageScore = queryPair.getScore();
@@ -362,7 +362,9 @@ private static final int NUM_RUNS = 100;
 			
 			double pair1Precision = 1.0/pair1Rank;
 			double pair2Precision = 2.0/pair2Rank;
-			double pair3Precision = 3.0/pair3Rank;			
+			double pair3Precision = 3.0/pair3Rank;		
+			
+			System.out.println("pair1rank = " + pair1Rank + ", pair2rank = " + pair2Rank + ", pair3rank = " + pair3Rank);
 			
 			reciprocals[index] = pair1Precision;
 			index++;
