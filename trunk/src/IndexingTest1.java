@@ -276,8 +276,7 @@ private static final int NUM_RUNS = 100;
 		int index = 0;
 		int queryImage = 3;
 		for(int j = 0; j < NUM_RUNS; j++)
-		{		
-			queryImage = queryImage + 4;
+		{					
 			//take one image and query all the points in it and vote...
 			System.out.println(stars + "\nQuerying with image number \n" + queryImage);
 			NumberFormat formatter = new DecimalFormat("00000");
@@ -369,6 +368,9 @@ private static final int NUM_RUNS = 100;
 		
 		double avrg = (avrg1 + avrg2 + avrg3) / 3;
 		
-		System.out.println("\n\nOverall average is " + avrg + "\n");						
+		System.out.println("\n\nOverall average is " + avrg + "\n");	
+		
+		// take the next query image
+		queryImage = queryImage + 4;
 	}	
 }
