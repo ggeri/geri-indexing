@@ -269,7 +269,7 @@ private static final int NUM_RUNS = 100;
 		
 		Vector<CountIndexPair> counts = new Vector<CountIndexPair>(IndexingTest1.NUM_LEAFS_IN_TRAINED_TREE);																
 		
-		PopulatedKDTree populatedTree = kdTreeInstance.populateKDTree(trainedTree, dataSetPopulating, imageIdFromMap, imageIndeces, counts);																			
+		PopulatedKDTree populatedTree = kdTreeInstance.populateKDTree(trainedTree, dataSetPopulating, imageIdFromMap, imageIndeces, counts);
 		
 //		Do NUM_RUNS run, vote and record ranks...		
 		double[] reciprocals = new double[IndexingTest1.NUM_RUNS * 3];
@@ -277,8 +277,7 @@ private static final int NUM_RUNS = 100;
 		int queryImage = 3;
 		for(int j = 0; j < NUM_RUNS; j++)
 		{					
-			//take one image and query all the points in it and vote...
-			System.out.println(stars + "\nQuerying with image number \n" + queryImage);
+			//take one image and query all the points in it and vote...			
 			NumberFormat formatter = new DecimalFormat("00000");
 			String imageFileName = KeypointsExtraction.imagePath + "ukbench" + formatter.format(queryImage) + ".obj";
 		
@@ -289,7 +288,7 @@ private static final int NUM_RUNS = 100;
 			// we put all the image-votes pairs in a list and sort it
 			LinkedList<ImageScorePair> scoresList = new LinkedList<ImageScorePair>();
 			
-			ImageScorePair pair1 = null, pair2 = null, pair3 = null;
+			ImageScorePair pair1 = null, pair2 = null, pair3 = null, queryPair = null;
 			for(int i = 0; i < votes.length; i++)
 			{
 				if(i != queryImage) // we take the query image out of the set
@@ -309,14 +308,37 @@ private static final int NUM_RUNS = 100;
 					{						
 						pair3 = pair;
 					}					
-				}			
+				}else
+				{
+					ImageScorePair pair = new ImageScorePair(i, votes[i]);
+					
+					System.out.println("queryPair has " + votes[i] + " scores and is located at position " + i);					
+					
+					scoresList.add(pair);
+					queryPair = pair;
+				}		
 			}
 			
+			// create instance of Scores class with above created scoresList
 			Scores scores = new Scores(scoresList);
 			
+			// sort scores - create instance of Scores class with the same scoresList, but sorted
 			Scores scoresSorted = scores.sortScores(scores);
+			// get the sorted list of scores		
 			LinkedList<ImageScorePair> scoresListSorted = scoresSorted.getScoresList();
 			
+			// get and print the rank of queryPair - should be first
+			int queryPairRank = scoresListSorted.indexOf(queryPair);
+			System.out.println("/nRank of the queryPair - it should be 0: " + queryPairRank);
+			
+			//get and print out the number of votes for the queryPair - it should be equal to the number of keypoints in the query image
+			int queryImageScore = queryPair.getScore();
+			
+			// check how many votes query image gets
+			short[] dataSet = KeypointPairsExtraction.getDataSet(queryImage);
+			System.out.println("The score of the queryImage: " + queryImageScore + 
+					" and the number of keypoint pairs in queryImage is: " + (dataSet.length / Keypoint.DESCRIPTOR_LENGTH));
+						
 			
 			// Now for each of the remaining three images, we find the reciprocals and add them to the reciprocal set
 			// For now, for simplicity we always query with the 4th of the 4 images in a block				

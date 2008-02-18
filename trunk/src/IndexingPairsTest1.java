@@ -167,12 +167,11 @@ private static final int NUM_RUNS = 100;
 		{
 			System.out.println(stars + "\nCreate dataset for populating the tree. ");										
 			
-			long timeStart = System.currentTimeMillis();
-			int image = 0;
+			long timeStart = System.currentTimeMillis();			
 			try
 			{
 				int position = 0;
-				//int image = 0;				
+				int image = 0;				
 				for(image = 0; image < IndexingPairsTest1.NUM_IMAGES_POPULATING; image++)
 				{					
 					// imageIDs   	
@@ -194,8 +193,7 @@ private static final int NUM_RUNS = 100;
 				dataSetPopulatingTemp = null;
 				
 			} catch(Exception e)
-			{
-				System.err.println( "Chrushed while getting points from image " + image + " for populating the tree.\nStack trace:" ); 
+			{				 
 				e.printStackTrace(System.err);
 			}		
 			long timeEnd = System.currentTimeMillis();
