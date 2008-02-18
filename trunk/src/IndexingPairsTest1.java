@@ -370,6 +370,9 @@ private static final int NUM_RUNS = 100;
 			index++;
 			reciprocals[index] = pair3Precision;
 			index++;
+						
+			// take the next queryImage
+			queryImage = queryImage + 4;
 		}
 		
 		double sum1 = 0, sum2 = 0, sum3 = 0;
@@ -391,8 +394,5 @@ private static final int NUM_RUNS = 100;
 		double avrg = (avrg1 + avrg2 + avrg3) / 3;
 		
 		System.out.println("\n\nOverall average is " + avrg + "\n");	
-		
-		// take the next queryImage
-		queryImage = queryImage + 4;
 	}	
 }
