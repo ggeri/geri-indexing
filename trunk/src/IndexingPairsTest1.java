@@ -318,6 +318,7 @@ private static final int NUM_RUNS = 1; //100;
 					ImageScorePair pair = new ImageScorePair(i, votes[i]);
 					
 					System.out.println("queryPair has " + votes[i] + " scores and is located at position " + i);
+					System.out.println("i = " + i + " and queryImage = " + queryImage);
 					
 					scoresList.add(pair);
 					queryPair = pair;
