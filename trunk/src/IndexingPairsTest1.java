@@ -292,7 +292,7 @@ private static final int NUM_RUNS = 100;
 			// we put all the image-votes pairs in a list and sort it
 			LinkedList<ImageScorePair> scoresList = new LinkedList<ImageScorePair>();
 			
-			ImageScorePair pair1 = null, pair2 = null, pair3 = null;
+			ImageScorePair pair1 = null, pair2 = null, pair3 = null, queryPair = null;
 			for(int i = 0; i < votes.length; i++)
 			{
 				// add change here
@@ -313,13 +313,26 @@ private static final int NUM_RUNS = 100;
 					{						
 						pair3 = pair;
 					}					
-				}			
+				}else
+				{
+					ImageScorePair pair = new ImageScorePair(i, votes[i]);
+					scoresList.add(pair);
+					queryPair = pair;
+				}
 			}
 			
+			// create instance of Scores class with above created scoresList
 			Scores scores = new Scores(scoresList);
 			
+			// sort scores - create instance of Scores class with the same scoresList, but sorted
 			Scores scoresSorted = scores.sortScores(scores);
+			// get the sorted list of scores
 			LinkedList<ImageScorePair> scoresListSorted = scoresSorted.getScoresList();
+			
+			// get and print the rank of queryPair - should be first
+			int queryPairRank = scoresListSorted.indexOf(queryPair);
+			System.out.println("Rank of the queryPair - it should be first: " + queryPairRank);
+			
 			
 			// Now for each of the remaining three images, we find the reciprocals and add them to the reciprocal set
 			// For now, for simplicity we always query with the 4th of the 4 images in a block				
