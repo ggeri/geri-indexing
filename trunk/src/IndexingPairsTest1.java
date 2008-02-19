@@ -289,7 +289,7 @@ private static final int NUM_RUNS = 100;
 		
 			int[] votes = kdTreeInstance.voteForImage(trainedTree, populatedTree, counts, imageFileName, IndexingPairsTest1.NUM_IMAGES_POPULATING); 
 				
-			System.out.println("\nNumber of votes for image " + queryImage + " is " + votes[queryImage]);
+			System.out.println("\nImage " + queryImage + "has " + votes[queryImage] + " votes.");
 			
 			// we put all the image-votes pairs in a list and sort it
 			LinkedList<ImageScorePair> scoresList = new LinkedList<ImageScorePair>();
@@ -319,7 +319,7 @@ private static final int NUM_RUNS = 100;
 				{
 					ImageScorePair pair = new ImageScorePair(i, votes[i]);
 					
-					System.out.println("queryPair has " + votes[i] + " scores and is located at position " + i);					
+					System.out.println("In votes array, queryImage is located at position " + i + " and has " + votes[i] + " votes.");					
 					
 					scoresList.add(pair);
 					queryPair = pair;
@@ -336,15 +336,15 @@ private static final int NUM_RUNS = 100;
 			
 			// get and print the rank of queryPair - should be first
 			int queryPairRank = scoresListSorted.indexOf(queryPair);
-			System.out.println("Rank of the queryPair - it should be 0: " + queryPairRank);
+			System.out.println("Rank of the queryImage in array of sorted scores - it should be 0: " + queryPairRank);
 			
 			//get and print out the number of votes for the queryPair - it should be equal to the number of keypoints in the query image
 			int queryImageScore = queryPair.getScore();
 			
 			// check how many votes query image gets
 			short[] dataSet = KeypointPairsExtraction.getDataSet(queryImage);
-			System.out.println("The score of the queryImage: " + queryImageScore + 
-					" and the number of keypoint pairs in queryImage is: " + (dataSet.length / Keypoint.DESCRIPTOR_LENGTH));
+			System.out.println("The score of the queryImage and the number of keypoint pairs in queryImage should be the same: " + 
+					queryImageScore + " = " + (dataSet.length / Keypoint.DESCRIPTOR_LENGTH));
 			
 			// now take the query image out of the scoresList so that it doesn't influence the results
 			scoresListSorted.remove(queryPair);
