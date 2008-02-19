@@ -337,7 +337,7 @@ public class KeypointPairsExtraction
 			
 			KeypointPair[] keyptPairArr = imageKeyptPairs.getKeyptPairArray();	
 			
-			System.out.println("Length of keyptPairArr: " + keyptPairArr);
+			System.out.println("Length of keyptPairArr: " + keyptPairArr.length);
 			
 			dataSet = new short[Keypoint.DESCRIPTOR_LENGTH * keyptPairArr.length];	
 			
