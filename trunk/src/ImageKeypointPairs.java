@@ -189,18 +189,16 @@ public class ImageKeypointPairs implements Serializable
 		}
 		// trim the empty spots in keyptPairArray since before we intitialized it to 
 		// NUM_PAIRS * keyptArray.length and we might end up having less then that number
-		// copy elemnts from keyptPairArray that are not null to this.keyptPairArray			
-		
+		// copy elemnts from keyptPairArray that are not null to this.keyptPairArray					
 		if(lastPosition == 0)
 		{
 			this.keyptPairArray = new KeypointPair[0];
 		}else
 		{
+			// lastPosition points to the position of the next element i.e. since it starts from 0,
+			// position_of_next_el = num_elements
 			this.keyptPairArray = new KeypointPair[lastPosition];
 		}
-		
-		System.out.println("Number of singletons is: " + keyptArray.length);
-		System.out.println("Number of pairs is: " + this.keyptPairArray.length);
 		
 		for(int i = 0; i < keyptPairArray.length; i++)
 		{
