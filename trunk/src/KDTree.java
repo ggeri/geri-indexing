@@ -600,9 +600,8 @@ public class KDTree
 			int firstElIndex = counts.get(binID).getIndex();
 			
 			// go into the populated tree, go to the point at index firstElIndex and 
-			// iterate over next count points								
-			int to = firstElIndex + count;			
-			for(int j = firstElIndex; j < to; j++)
+			// iterate over next count points											
+			for(int j = firstElIndex; j < firstElIndex + count; j++)
 			{
 				// get the imageID of the retrieved point				
 				int imageID = (populatedTree.getImageIDs())[j];
@@ -610,11 +609,16 @@ public class KDTree
 				// vote for the image imageID				
 				if(lastQueryPtVoted[imageID] != queryPtID)
 				{
-					votes[imageID]++;
+					votes[imageID] = votes[imageID] + 1;
 					lastQueryPtVoted[imageID] = queryPtID;
+					
+					if(imageID == 399)
+					{
+						System.out.println(imageID + " " + votes[imageID]);
+					}
 				}						
 			}			
-		}		
+		}	
 	}
 	
 	
