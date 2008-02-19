@@ -58,9 +58,7 @@ private static final int NUM_RUNS = 1; //100;
 				int image = 0;
 				for(image = 0; image < IndexingPairsTest1.NUM_IMAGES_TRAINING && position < dataSetArrLength; image++)
 				{					
-					short[] dataSet = KeypointPairsExtraction.getDataSet(image);
-					
-					System.out.println("Data set size = " + dataSet.length);
+					short[] dataSet = KeypointPairsExtraction.getDataSet(image);					
 					
 					if(dataSet.length > dataSetArrLength - position)
 					{

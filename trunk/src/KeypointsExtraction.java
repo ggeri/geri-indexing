@@ -270,8 +270,6 @@ public class KeypointsExtraction
 			ImageKeypoints imageKeypts = (ImageKeypoints)in.readObject();	
 							
 			KeypointSingleton[] keyptArr = imageKeypts.getKeyptArray();			
-			
-			System.out.println("Length of keyptArr: " + keyptArr.length);
 						
 			dataSet = new short[Keypoint.DESCRIPTOR_LENGTH * keyptArr.length];						
 			
