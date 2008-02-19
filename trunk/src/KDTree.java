@@ -612,10 +612,10 @@ public class KDTree
 					votes[imageID] = votes[imageID] + 1;
 					lastQueryPtVoted[imageID] = queryPtID;
 					
-					if(imageID == 3)
-					{
-						System.out.println(imageID + " " + votes[imageID]);
-					}
+//					if(imageID == 3)
+//					{
+//						System.out.println(imageID + " " + votes[imageID]);
+//					}
 				}						
 			}			
 		}	
