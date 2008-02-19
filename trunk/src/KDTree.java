@@ -470,7 +470,7 @@ public class KDTree
 		// trim the counts vector to its actual size
 		counts.trimToSize();	
 		
-		System.out.println("Size of imageIDs is " + imageIDs.length);
+		System.out.println("Size of imageIDs is " + imageIDs.length + "\n");
 		
 		int nextElIndx = 0;
 		// loop over dataSetPopulating array and process each keypoint (keypt size is 36 - step is 36)

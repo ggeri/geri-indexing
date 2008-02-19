@@ -33,16 +33,16 @@ private static final int NUM_RUNS = 2548;
 		System.out.println(stars + "\nCreate .pair.obj file for each image and store them to the disk. ");
 		
 		
-		for(int i = 0; i < 100; i++)
-		{
-			int im = 3;
-			KeypointPairsExtraction keyptPairExtract = new KeypointPairsExtraction(im);
-			System.out.println("Image " + im);
-			im = im + 4;
-		}
-		
-		System.out.println("Finished extraction successfully.");
-		System.exit(1);
+//		for(int i = 0; i < 100; i++)
+//		{
+//			int im = 3;
+//			KeypointPairsExtraction keyptPairExtract = new KeypointPairsExtraction(im);
+//			System.out.println("Image " + im);
+//			im = im + 4;
+//		}
+//		
+//		System.out.println("Finished extraction successfully.");
+//		System.exit(1);
 
 		//Get an instance of the KDTree class
 		KDTree kdTreeInstance = new KDTree();
@@ -381,7 +381,7 @@ private static final int NUM_RUNS = 2548;
 			double pair2Precision = 2.0/pair2Rank;
 			double pair3Precision = 3.0/pair3Rank;		
 						
-			System.out.println("pair1rank = " + pair1Rank + ", pair2rank = " + pair2Rank + ", pair3rank = " + pair3Rank);
+			System.out.println("pair1rank = " + pair1Rank + ",\tpair2rank = " + pair2Rank + ",\tpair3rank = " + pair3Rank);
 			
 			reciprocals[index] = pair1Precision;
 			index++;
