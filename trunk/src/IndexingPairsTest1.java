@@ -20,7 +20,7 @@ private static final int NUM_NODES_IN_TRAINED_TREE = 3 * IndexingPairsTest1.NUM_
 private static final int NUM_PTS_TRAINING = 10000000;	
 private static final int NUM_IMAGES_TRAINING = 10200;
 private static final int NUM_IMAGES_POPULATING = 10200; 	// set heap to 6144max & w/ flag -XX:-UseGCOverheadLimit
-private static final int NUM_RUNS = 100; // 2549;
+private static final int NUM_RUNS = 2549;
 	
 	public static void main(String[] args) 
 	{	
