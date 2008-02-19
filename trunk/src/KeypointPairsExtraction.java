@@ -127,7 +127,7 @@ public class KeypointPairsExtraction
 		//this.generateOBJFile(fileNamePKEY, fileNameOBJ);
 		
 		// create the files that represent the sets of keypoint pairs (one file per image)
-		this.generatePAIROBJFile(fileNameOBJ, fileNameQueryPAIROBJ);
+		this.generatePAIROBJFile(fileNameOBJ, fileNamePAIROBJ);
 		
 		// remove .key files		
 		//this.deleteFile(fileNameKEY);				

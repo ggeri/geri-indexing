@@ -20,7 +20,7 @@ private static final int NUM_NODES_IN_TRAINED_TREE = 3 * IndexingPairsTest1.NUM_
 private static final int NUM_PTS_TRAINING = 10000000;	
 private static final int NUM_IMAGES_TRAINING = 10200;
 private static final int NUM_IMAGES_POPULATING = 10200; 	// set heap to 6144max & w/ flag -XX:-UseGCOverheadLimit
-private static final int NUM_RUNS = 2549;
+private static final int NUM_RUNS = 100; // 2549;
 	
 	public static void main(String[] args) 
 	{	
@@ -31,17 +31,8 @@ private static final int NUM_RUNS = 2549;
 		 * to .key files and finally reads thesefiles and creates serialized javaobjects on the disk.
 		 */
 		System.out.println(stars + "\nCreate .pair.obj file for each image and store them to the disk. ");
-		
-		
-		for(int i = 0, im = 3; i < 100; i++)
-		{			
-			KeypointPairsExtraction keyptPairExtract = new KeypointPairsExtraction(im);
-			System.out.println("Image " + im);
-			im = im + 4;
-		}
-		
-		System.out.println("Finished extraction successfully.");
-		System.exit(1);
+		//KeypointPairsExtraction keyptPairExtract = new KeypointPairsExtraction();
+
 
 		//Get an instance of the KDTree class
 		KDTree kdTreeInstance = new KDTree();
@@ -296,7 +287,7 @@ private static final int NUM_RUNS = 2549;
 			//take one image and query with all the points in it and vote...
 			
 			NumberFormat formatter = new DecimalFormat("00000");
-			String imageFileName = KeypointPairsExtraction.imagePath + "ukbench" + formatter.format(queryImage) + ".pair.obj";														
+			String imageFileName = KeypointPairsExtraction.imagePath + "ukbench" + formatter.format(queryImage) + ".q.pair.obj";														
 		
 			int[] votes = kdTreeInstance.voteForImage(trainedTree, populatedTree, counts, imageFileName, IndexingPairsTest1.NUM_IMAGES_POPULATING); 
 				
