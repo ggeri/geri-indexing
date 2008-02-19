@@ -602,7 +602,7 @@ public class KDTree
 			// go into the populated tree, go to the point at index firstElIndex and 
 			// iterate over next count points			
 			
-			System.out.println("In for loop " + 399 + " " + votes[399]);
+			System.out.println("In for loop " + 3 + " " + votes[3]);
 			
 			for(int j = firstElIndex; j < firstElIndex + count; j++)
 			{
@@ -615,7 +615,7 @@ public class KDTree
 					votes[imageID] = votes[imageID] + 1;
 					lastQueryPtVoted[imageID] = queryPtID;
 					
-					if(imageID == 399)
+					if(imageID == 3)
 					{
 						System.out.println(imageID + " " + votes[imageID]);
 					}
