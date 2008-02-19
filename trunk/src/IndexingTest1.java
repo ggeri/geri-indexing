@@ -378,7 +378,7 @@ private static final int NUM_RUNS = 100; //2549;
 			double pair2Precision = 2.0/pair2Rank;
 			double pair3Precision = 3.0/pair3Rank;
 						
-			System.out.println("pair1rank = " + pair1Rank + ",\tpair2rank = " + pair2Rank + ",\tpair3rank = " + pair3Rank);			
+			//System.out.println("pair1rank = " + pair1Rank + ",\tpair2rank = " + pair2Rank + ",\tpair3rank = " + pair3Rank);			
 			
 			reciprocals[index] = pair1Precision;
 			index++;
@@ -395,7 +395,7 @@ private static final int NUM_RUNS = 100; //2549;
 		int im1AvrgVotes = im1VotesSum / IndexingTest1.NUM_RUNS;
 		int im2AvrgVotes = im2VotesSum / IndexingTest1.NUM_RUNS;
 		int im3AvrgVotes = im3VotesSum / IndexingTest1.NUM_RUNS;
-		System.out.println("Avrg votes im1 = " + im1AvrgVotes + ", avrg votes im2 = " + im2AvrgVotes + ", avrg votes im3 = " + im3AvrgVotes);
+		System.out.println("\nAvrg votes im1 = " + im1AvrgVotes + ", avrg votes im2 = " + im2AvrgVotes + ", avrg votes im3 = " + im3AvrgVotes);
 		
 		// Average for all 3 mathing images
 		int imMatchAvrgVotes = (im1AvrgVotes + im2AvrgVotes + im3AvrgVotes) / 3;
@@ -418,11 +418,11 @@ private static final int NUM_RUNS = 100; //2549;
 		double avrg2 = sum2 / IndexingTest1.NUM_RUNS;
 		double avrg3 = sum3 / IndexingTest1.NUM_RUNS;
 		
-		System.out.println("Average for the image 1: " + avrg1 + "\nAverage for the image 2: " + avrg2 + 
-				"\nAverage for the image 3: " + avrg3);
+		System.out.println("\nAverage prec for the image 1: " + avrg1 + "\nAverage prec for the image 2: " + avrg2 + 
+				"\nAverage prec for the image 3: " + avrg3);
 		
 		double avrg = (avrg1 + avrg2 + avrg3) / 3;
 		
-		System.out.println("\n\nOverall average is " + avrg + "\n");				
+		System.out.println("\n\nOverall average precision is " + avrg + "\n");				
 	}	
 }
