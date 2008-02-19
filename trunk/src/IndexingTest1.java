@@ -10,8 +10,8 @@ public class IndexingTest1 {
  * true = the tree will be trained 
  * false = the tree will be read from the disk - if there is a file with the specified name on the disk.
  */
-private static boolean train = true;	
-private static boolean populate = true;
+private static boolean train = false;	
+private static boolean populate = false;
 
 // if there is apporximatelly 2000 points per image, then the number of bins is (num_images*2000)/bin_size
 private static final int NUM_LEAFS_IN_TRAINED_TREE = (KeypointsExtraction.NUM_IMAGES * 2000)/KDTree.THRESHOLD; //1000000;
@@ -292,6 +292,7 @@ private static final int NUM_RUNS = 100;
 			int[] votes = kdTreeInstance.voteForImage(trainedTree, populatedTree, counts, imageFileName, IndexingTest1.NUM_IMAGES_POPULATING); 			
 			
 			System.out.println("\nImage " + queryImage + "has " + votes[queryImage] + " votes.");
+			System.out.println("In votes array, queryImage is located at position " + queryImage + " and has " + votes[queryImage] + " votes.");
 				
 			// we put all the image-votes pairs in a list and sort it
 			LinkedList<ImageScorePair> scoresList = new LinkedList<ImageScorePair>();
@@ -319,8 +320,6 @@ private static final int NUM_RUNS = 100;
 				}else
 				{
 					ImageScorePair pair = new ImageScorePair(i, votes[i]);
-					
-					System.out.println("In votes array, queryImage is located at position " + i + " and has " + votes[i] + " votes.");			
 					
 					scoresList.add(pair);
 					queryPair = pair;
