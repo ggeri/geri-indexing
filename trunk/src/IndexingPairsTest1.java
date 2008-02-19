@@ -33,9 +33,8 @@ private static final int NUM_RUNS = 2549;
 		System.out.println(stars + "\nCreate .pair.obj file for each image and store them to the disk. ");
 		
 		
-		for(int i = 0; i < 100; i++)
-		{
-			int im = 3;
+		for(int i = 0, im = 3; i < 100; i++)
+		{			
 			KeypointPairsExtraction keyptPairExtract = new KeypointPairsExtraction(im);
 			System.out.println("Image " + im);
 			im = im + 4;
