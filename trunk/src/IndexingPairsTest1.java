@@ -282,6 +282,12 @@ private static final int NUM_RUNS = 100; // 2549;
 		double[] reciprocals = new double[IndexingPairsTest1.NUM_RUNS * 3];
 		int index = 0;
 		int queryImage = 3; 
+		
+		// To get average number of votes for the 3 matching images and the average for the 
+		// remaining (NUM_IMAGES - 4) images
+		int im1VotesSum = 0, im2VotesSum = 0, im3VotesSum = 0;
+		int imRestSum = 0;
+		
 		for(int j = 0; j < NUM_RUNS; j++)
 		{			
 			//take one image and query with all the points in it and vote...
@@ -308,23 +314,30 @@ private static final int NUM_RUNS = 100; // 2549;
 					
 					if(i == queryImage - 3)
 					{
-						pair1 = pair;						
+						pair1 = pair;	
+						im1VotesSum = im1VotesSum + pair.getScore();
 					}
-					if(i == queryImage - 2)
+					else if(i == queryImage - 2)
 					{						
 						pair2 = pair;
+						im2VotesSum = im2VotesSum + pair.getScore();
 					}
-					if(i == queryImage - 1)
+					else if(i == queryImage - 1)
 					{						
 						pair3 = pair;
-					}					
+						im3VotesSum = im3VotesSum + pair.getScore();
+					}	
+					else
+					{
+						imRestSum = imRestSum + pair.getScore();
+					}
 				}else
 				{
 					ImageScorePair pair = new ImageScorePair(i, votes[i]);									
 					
 					scoresList.add(pair);
 					queryPair = pair;
-				}
+				}					
 			}
 			
 			// create instance of Scores class with above created scoresList
@@ -383,6 +396,20 @@ private static final int NUM_RUNS = 100; // 2549;
 			// take the next queryImage
 			queryImage = queryImage + 4;
 		}
+		
+		// Average number of votes for matching images 1, 2 and 3
+		int im1AvrgVotes = im1VotesSum / IndexingPairsTest1.NUM_RUNS;
+		int im2AvrgVotes = im2VotesSum / IndexingPairsTest1.NUM_RUNS;
+		int im3AvrgVotes = im3VotesSum / IndexingPairsTest1.NUM_RUNS;
+		System.out.println("Avrg votes im1 = " + im1AvrgVotes + ", avrg votes im2 = " + im2AvrgVotes + ", avrg votes im3 = " + im3AvrgVotes);
+		
+		// Average for all 3 mathing images
+		int imMatchAvrgVotes = (im1AvrgVotes + im2AvrgVotes + im3AvrgVotes) / 3;
+		System.out.println("Average votes for matching im (im1,im2,im3) = " + imMatchAvrgVotes);
+		
+		// Average number of votes for all other non matching images
+		int imRestAvrgVotes = imRestSum / (IndexingPairsTest1.NUM_RUNS * (KeypointsExtraction.NUM_IMAGES-4));
+		System.out.println("Average votes for non-matching im (all except im1,im2,im3,im4) = " + imRestAvrgVotes);
 		
 		double sum1 = 0, sum2 = 0, sum3 = 0;
 		
