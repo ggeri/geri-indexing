@@ -293,7 +293,7 @@ private static final int NUM_RUNS = 2549;
 			//take one image and query with all the points in it and vote...
 			
 			NumberFormat formatter = new DecimalFormat("00000");
-			String imageFileName = KeypointPairsExtraction.imagePath + "ukbench" + formatter.format(queryImage) + ".q.pair.obj";														
+			String imageFileName = KeypointPairsExtraction.imagePath + "ukbench" + formatter.format(queryImage) + ".pair.obj";														
 		
 			int[] votes = kdTreeInstance.voteForImage(trainedTree, populatedTree, counts, imageFileName, IndexingPairsTest1.NUM_IMAGES_POPULATING); 
 				
