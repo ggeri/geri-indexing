@@ -600,7 +600,10 @@ public class KDTree
 			int firstElIndex = counts.get(binID).getIndex();
 			
 			// go into the populated tree, go to the point at index firstElIndex and 
-			// iterate over next count points											
+			// iterate over next count points			
+			
+			System.out.println("In for loop " + 399 + " " + votes[399]);
+			
 			for(int j = firstElIndex; j < firstElIndex + count; j++)
 			{
 				// get the imageID of the retrieved point				
