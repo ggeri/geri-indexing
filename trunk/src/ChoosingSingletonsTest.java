@@ -21,7 +21,7 @@ import java.util.Random;
 public class ChoosingSingletonsTest {
 
 	// max euclidean distance that we can tolerate between two points to still consider them the same
-	private static double maxDistance = 4050; // reduced from 4500 by 10%
+	private static double maxDistance = 4500; 
 	/**
 	 * @param args
 	 */
@@ -78,7 +78,7 @@ public class ChoosingSingletonsTest {
 			}			
 		}
 		
-		System.out.println("Two images from different sets");
+		System.out.println("\nTwo images from different sets");
 		System.out.format("On average, fraction of points in the first image that "
 				+ "have at least one match in the second image is: %.3f", (fractionSum / numImages));
 		System.out.println(" %");
