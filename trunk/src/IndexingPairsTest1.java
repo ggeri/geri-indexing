@@ -289,7 +289,7 @@ private static final int NUM_RUNS = 100;
 		
 			int[] votes = kdTreeInstance.voteForImage(trainedTree, populatedTree, counts, imageFileName, IndexingPairsTest1.NUM_IMAGES_POPULATING); 
 				
-			System.out.println("Number of votes for image " + queryImage + " is " + votes[queryImage]);
+			System.out.println("\nNumber of votes for image " + queryImage + " is " + votes[queryImage]);
 			
 			// we put all the image-votes pairs in a list and sort it
 			LinkedList<ImageScorePair> scoresList = new LinkedList<ImageScorePair>();
@@ -336,7 +336,7 @@ private static final int NUM_RUNS = 100;
 			
 			// get and print the rank of queryPair - should be first
 			int queryPairRank = scoresListSorted.indexOf(queryPair);
-			System.out.println("\nRank of the queryPair - it should be 0: " + queryPairRank);
+			System.out.println("Rank of the queryPair - it should be 0: " + queryPairRank);
 			
 			//get and print out the number of votes for the queryPair - it should be equal to the number of keypoints in the query image
 			int queryImageScore = queryPair.getScore();
