@@ -464,7 +464,8 @@ public class KDTree
 			CountIndexPair pair = new CountIndexPair();
 			counts.add(pair);
 		}
-		
+		// trim the counts vector to its actual size
+		counts.trimToSize();	
 		
 		System.out.println("Size of imageIDs is " + imageIDs.length);
 		

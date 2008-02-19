@@ -13,8 +13,10 @@ public class IndexingTest1 {
 private static boolean train = false;	
 private static boolean populate = false;
 
+// if there is apporximatelly 2000 points per image, then the number of bins is (num_images*2000)/bin_size
+private static final int NUM_LEAFS_IN_TRAINED_TREE = (KeypointsExtraction.NUM_IMAGES * 2000)/KDTree.THRESHOLD; //1000000;
+// tree has three times more nodes then leafs
 private static final int NUM_NODES_IN_TRAINED_TREE = 3 * IndexingTest1.NUM_LEAFS_IN_TRAINED_TREE;
-private static final int NUM_LEAFS_IN_TRAINED_TREE = 1000000;		
 private static final int NUM_PTS_TRAINING = 10000000;	
 private static final int NUM_IMAGES_TRAINING = 10200;
 private static final int NUM_IMAGES_POPULATING = 10200; 	// works with 1000 if heap set to 6144max & w/ flag -XX:-UseGCOverheadLimit
@@ -266,7 +268,8 @@ private static final int NUM_RUNS = 100;
 		}
 		
 		
-		
+		// contains a CountIndexPair per image for all the images in populated tree - count gives number of points 
+		//in that specific image and index gives the index of the first point of that image
 		Vector<CountIndexPair> counts = new Vector<CountIndexPair>(IndexingTest1.NUM_LEAFS_IN_TRAINED_TREE);																
 		
 		PopulatedKDTree populatedTree = kdTreeInstance.populateKDTree(trainedTree, dataSetPopulating, imageIDs, imageIndeces, counts);
@@ -284,6 +287,7 @@ private static final int NUM_RUNS = 100;
 		
 			int[] votes = kdTreeInstance.voteForImage(trainedTree, populatedTree, counts, imageFileName, IndexingTest1.NUM_IMAGES_POPULATING); 			
 			
+			System.out.println("Number of votes for image " + queryImage + " is " + votes[queryImage]);
 				
 			// we put all the image-votes pairs in a list and sort it
 			LinkedList<ImageScorePair> scoresList = new LinkedList<ImageScorePair>();
