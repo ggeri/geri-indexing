@@ -10,8 +10,8 @@ public class IndexingPairsTest1 {
  * true = the tree will be trained 
  * false = the tree will be read from the disk - if there is a file with the specified name on the disk.
  */
-private static boolean train = false;	
-private static boolean populate = false;
+private static boolean train = true;	
+private static boolean populate = true;
 
 //if there is apporximatelly 2000 points per image, then the number of bins is (num_images*2000)/bin_size
 private static final int NUM_LEAFS_IN_TRAINED_TREE = (KeypointPairsExtraction.NUM_IMAGES * 2000)/KDTree.THRESHOLD; //1000000;
@@ -71,7 +71,9 @@ private static final int NUM_RUNS = 1; //100;
 						System.arraycopy(dataSet, 0, dataSetTraining, position, dataSet.length);
 						position = position + dataSet.length;
 					}						
-				}				
+				}		
+				System.out.println("Number of images used for the dataSetTreining is " + image);
+				System.out.println("Number of points used for the dataSetTreining is " + dataSetTraining.length);
 				
 			} catch(Exception e)
 			{
