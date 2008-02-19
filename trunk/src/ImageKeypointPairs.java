@@ -55,7 +55,7 @@ public class ImageKeypointPairs implements Serializable
 	 * How many pairs do we want - we want a multiple of the number of keypoints, i.e. we want 
 	 * NUM_PAIRS * number_of_keypoints
 	 */
-	private final int NUM_PAIRS = 1;
+	private final int NUM_PAIRS = 10;
 	
 	/**
 	 * Number of nearest neighbours we are interested in; i.e. we consider some number x of the closest points to a 

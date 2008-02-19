@@ -115,6 +115,7 @@ public class KeypointPairsExtraction
 		String fileNamePKEY = KeypointPairsExtraction.imagePath + "ukbench" + formatter.format(imageNum) + ".pkey";
 		String fileNameOBJ = KeypointPairsExtraction.imagePath + "ukbench" + formatter.format(imageNum) + ".obj";
 		String fileNamePAIROBJ = KeypointPairsExtraction.imagePath + "ukbench" + formatter.format(imageNum) + ".pair.obj";
+		String fileNameQueryPAIROBJ = KeypointPairsExtraction.imagePath + "ukbench" + formatter.format(imageNum) + ".q.pair.obj";
 		
 		// extracts keypoints from the images
 		//this.generateKEYFile(imageJPG, imagePGM, fileNameKEY);		
@@ -126,13 +127,13 @@ public class KeypointPairsExtraction
 		//this.generateOBJFile(fileNamePKEY, fileNameOBJ);
 		
 		// create the files that represent the sets of keypoint pairs (one file per image)
-		this.generatePAIROBJFile(fileNameOBJ, fileNamePAIROBJ);
+		this.generatePAIROBJFile(fileNameOBJ, fileNameQueryPAIROBJ);
 		
 		// remove .key files		
 		//this.deleteFile(fileNameKEY);				
 		
 		// add .obj file to the nameIdMap - we map image file names to image ids			
-		KeypointPairsExtraction.nameIdMap.add(fileNamePAIROBJ);
+		//KeypointPairsExtraction.nameIdMap.add(fileNamePAIROBJ);
 	
 	}
 	
