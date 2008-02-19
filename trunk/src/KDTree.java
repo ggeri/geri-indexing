@@ -98,7 +98,7 @@ public class KDTree
 			int index = trainedTree.size();
 			trainedTree.add(trainedTree.size(), new KDLeaf());	
 			return index;
-		}	
+		}			
 	}
 		
 	/**
@@ -284,9 +284,10 @@ public class KDTree
 	
 	/**
 	 * This method takes a query point and returns the a leaf node 
-	 * that contain points close to it.
+	 * that contain points close to it i.e. in the same bin with it.
 	 * @param tree
-	 * @param queryPoint
+	 * @param dataSetPopulating
+	 * @param keyptStart
 	 * @return
 	 */
 	public KDLeaf nearestBin(Vector tree, short[] dataSetPopulating, int keyptStart)
@@ -475,14 +476,13 @@ public class KDTree
 		for(int im = 0; im < imageIndeces.length-1; im++)	
 		{												
 			// imageID
-			int imageID = imageIdFromMap[im];
-			// System.out.println("Image " + imageID);
+			int imageID = imageIdFromMap[im]; 
 			
             // loop over all keypoints in dataSetPopulating that belong to this curent image
 			int pt = 0;
-			for(int i = imageIndeces[im]; i < imageIndeces[im+1]; i = i + 36)
+			for(int i = imageIndeces[im]; i < imageIndeces[im+1]; i = i + Keypoint.DESCRIPTOR_LENGTH)
 			{
-				// pointID - which pt this is inside of this image
+				// pointID - which pt this is (inside of this image)
 				int pointID = pt;
 				pt++;
 				
@@ -500,6 +500,7 @@ public class KDTree
 				
 				nextElIndx++;					
 									
+				// get the count-index pair in this bin and increment its count
 				CountIndexPair pair = counts.get(binID);
 				pair.incrementCount();
 			}

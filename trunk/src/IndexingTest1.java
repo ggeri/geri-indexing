@@ -94,6 +94,10 @@ private static final int NUM_RUNS = 100;
 			{
 				timeStart = System.currentTimeMillis();
 				kdTreeInstance.trainKDTree(dataSetTraining, 0, ((dataSetTraining.length / KeypointSingleton.DESCRIPTOR_LENGTH) - 1), trainedTree, dimBounds);
+
+				//trim the trainedTree to it's actual size
+				trainedTree.trimToSize();
+				
 				timeEnd = System.currentTimeMillis();
 				
 				System.out.println("Training time for the tree: " +  (((timeEnd - timeStart)/1000)/60) + "min");						
