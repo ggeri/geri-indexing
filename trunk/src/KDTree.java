@@ -339,6 +339,8 @@ public class KDTree
 			int binId = this.bestBinFirstNode(tree, queryPt, pq, nodeID, distance, threshold);
 			binIDs.add(new Integer(binId));		
 		}
+		// trim vector binIDs to its actual size
+		binIDs.trimToSize();
 		return binIDs;
 	}
 	
@@ -574,13 +576,15 @@ public class KDTree
 	 * It returns the vector with that number of elements equal to the number of images where
 	 * element at index i represents the image with imageID = i.
 	 */	
-	public void vote(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
+	public void voteForPoint(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
 			Keypoint queryPoint, int queryPtID, Vector<CountIndexPair> counts, int[] votes, int[] lastQueryPtVoted)
 	{				
+		// threshold for max distance between this query pt and points that we consider close enough
 		int threshold = 1000000000;
-		int maxBins = 25; // change back to 100
-		// get all the bins tha contain points 'reasonably' close to the query point
+		// threshold on number of bins we want to look into to find reasonably close points to this query point
+		int maxBins = 25; 
 		
+		// get all the bins tha contain points 'reasonably' close to the query point		
 		Vector<Integer> binIDs = this.bestBinFirst(trainedTree, queryPoint, threshold, maxBins);
 		
 		// iterate over all returned bins (the bins with 'close' points)
@@ -625,17 +629,20 @@ public class KDTree
 			Vector<CountIndexPair> counts, String imageFileName, int numOfImages)
 	{
 		int[] votes = new int[numOfImages];
+		
 		// indeces corespond to imageIDs - this array tells us what is the last query point
 		// that voted for this image
-		// we don't want to allow onw query point to vote for many points in an image so that one image 
-		//doesn't get too many votes due to many polled points in that image (this would happen if the
+		// we don't want to allow one query point to vote for many points in an image so that one image 
+		// doesn't get too many votes due to many polled points in that image (this would happen if the
 		// image contains a pattern for example)
+		// we initialize all elements of lastQueryPtVoted to -1
 		int[] lastQueryPtVoted = new int[numOfImages];
 		for(int i = 0; i < lastQueryPtVoted.length; i++)
 		{
 			lastQueryPtVoted[i] = -1;
 		}
 		
+		// read the image that we are voting for
 		File objFile = new File(imageFileName);		
 		try
 		{						
@@ -643,9 +650,11 @@ public class KDTree
 					BufferedInputStream(new FileInputStream(objFile)));
 			
 			ImageKeypoints imageKeypts;
-			Keypoint[] keyptArr;
 			ImageKeypointPairs imageKeyptPairs;
+			Keypoint[] keyptArr;			
 			
+			// get the all the keypoints or all the keypoint pairs 
+			// (depending on if it is .obj or .pair.obj file) from this image
 			if(imageFileName.endsWith(".pair.obj"))
 			{				
 				imageKeyptPairs = (ImageKeypointPairs)in.readObject();
@@ -656,10 +665,11 @@ public class KDTree
 				keyptArr = imageKeypts.getKeyptArray();
 			}							
 			
+			// vote for each keypoint in this image
 			for(int queryPtID = 0; queryPtID < keyptArr.length; queryPtID++)
 			{
 				Keypoint queryPoint = keyptArr[queryPtID];
-				this.vote(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes, lastQueryPtVoted);
+				this.voteForPoint(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes, lastQueryPtVoted);
 			}
 			in.close();
 			
