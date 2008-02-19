@@ -39,7 +39,7 @@ public class KeypointPairsExtraction
 	
 	public KeypointPairsExtraction()
 	{
-		for(int i = 0; i < KeypointPairsExtraction.NUM_IMAGES; i++)
+		for(int i = 5638; i < KeypointPairsExtraction.NUM_IMAGES; i++)
 		{	
 			//progress
 			if((i % 100) == 0 || i == 1) 
