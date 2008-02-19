@@ -33,13 +33,12 @@ private static final int NUM_RUNS = 1; //100;
 		System.out.println(stars + "\nCreate .pair.obj file for each image and store them to the disk. ");
 		//KeypointPairsExtraction keyptPairExtract = new KeypointPairsExtraction();
 		
-		/*
-		 * Get an instance of the KDTree class
-		 */
+
+		//Get an instance of the KDTree class
 		KDTree kdTreeInstance = new KDTree();
 		Vector<Node> trainedTree = new Vector<Node>(IndexingPairsTest1.NUM_NODES_IN_TRAINED_TREE); 				
 		
-		int dataSetArrLength = IndexingPairsTest1.NUM_PTS_TRAINING * KeypointSingleton.DESCRIPTOR_LENGTH; 
+		int dataSetArrLength = IndexingPairsTest1.NUM_PTS_TRAINING * Keypoint.DESCRIPTOR_LENGTH; 
 		
 		
 		short[] dataSetTraining = new short[dataSetArrLength];
@@ -58,9 +57,11 @@ private static final int NUM_RUNS = 1; //100;
 			{
 				int position = 0;
 				int image = 0;
-				for(image = 0; image < IndexingPairsTest1.NUM_IMAGES_TRAINING && position < (dataSetArrLength); image++)
+				for(image = 0; image < IndexingPairsTest1.NUM_IMAGES_TRAINING && position < dataSetArrLength; image++)
 				{					
 					short[] dataSet = KeypointPairsExtraction.getDataSet(image);
+					
+					System.out.println("Data set size = " + dataSet.length);
 					
 					if(dataSet.length > dataSetArrLength - position)
 					{
@@ -72,8 +73,8 @@ private static final int NUM_RUNS = 1; //100;
 						position = position + dataSet.length;
 					}						
 				}		
-				System.out.println("Number of images used for the dataSetTreining is " + image);
-				System.out.println("Number of points used for the dataSetTreining is " + dataSetTraining.length);
+				System.out.println("Number of images used for the dataSetTraining is " + image);
+				System.out.println("Number of points used for the dataSetTraining is " + dataSetTraining.length);
 				
 			} catch(Exception e)
 			{
@@ -81,12 +82,7 @@ private static final int NUM_RUNS = 1; //100;
 				e.printStackTrace(System.err);
 			}		
 			long timeEnd = System.currentTimeMillis();
-			System.out.println("Time to get data set for training the tree: " + (((timeEnd - timeStart)/1000)/60) + "min");	
-			System.out.println("Size of array that holds data for training: " + dataSetTraining.length);
-			
-			/*
-			 * We will train it on the number of images that is needed in order to have 2 000 000 points.
-			 */
+			System.out.println("Time to get data set for training the tree: " + (((timeEnd - timeStart)/1000)/60) + "min");				
 			
 			System.out.println(stars + "\nGetting the dimension bounds. ");
 			double[] dimBounds = kdTreeInstance.getDimensionBounds(dataSetTraining);
