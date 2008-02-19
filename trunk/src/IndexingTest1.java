@@ -340,7 +340,7 @@ private static final int NUM_RUNS = 100;
 			
 			// check how many votes query image gets
 			short[] dataSet = KeypointPairsExtraction.getDataSet(queryImage);
-			System.out.println("The score of the queryImage and the number of keypoint pairs in queryImage should be the same: " + 
+			System.out.println("queryImage score & number of keypoints in queryImage should be the same: " + 
 					queryImageScore + " = " + (dataSet.length / Keypoint.DESCRIPTOR_LENGTH));
 						
 			// now take the query image out of the scoresList so that it doesn't influence the results
