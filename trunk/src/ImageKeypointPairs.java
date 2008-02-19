@@ -189,10 +189,7 @@ public class ImageKeypointPairs implements Serializable
 		}
 		// trim the empty spots in keyptPairArray since before we intitialized it to 
 		// NUM_PAIRS * keyptArray.length and we might end up having less then that number
-		// copy elemnts from keyptPairArray that are not null to this.keyptPairArray
-		
-		System.out.println("Number of singletons is: " + keyptArray.length);
-		System.out.println("Number of pairs will be: " + (lastPosition - 1));
+		// copy elemnts from keyptPairArray that are not null to this.keyptPairArray			
 		
 		if(lastPosition == 0)
 		{
@@ -201,6 +198,9 @@ public class ImageKeypointPairs implements Serializable
 		{
 			this.keyptPairArray = new KeypointPair[lastPosition - 1];
 		}
+		
+		System.out.println("Number of singletons is: " + keyptArray.length);
+		System.out.println("Number of pairs is: " + this.keyptPairArray.length);
 		
 		for(int i = 0; i < keyptPairArray.length; i++)
 		{
