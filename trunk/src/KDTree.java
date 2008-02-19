@@ -587,10 +587,7 @@ public class KDTree
 		// get all the bins tha contain points 'reasonably' close to the query point		
 		Vector<Integer> binIDs = this.bestBinFirst(trainedTree, queryPoint, threshold, maxBins);
 		
-		// iterate over all returned bins (the bins with 'close' points)
-		
-		System.out.println("Outter loop size = number of bins: " + binIDs.size());
-		
+		// iterate over all returned bins (the bins with 'close' points)				
 		for(int i = 0; i < binIDs.size(); i++)
 		{
 			// for each bin, iterate over its points and vote for 
@@ -603,13 +600,7 @@ public class KDTree
 			int firstElIndex = counts.get(binID).getIndex();
 			
 			// go into the populated tree, go to the point at index firstElIndex and 
-			// iterate over next count points			
-			
-			if(i == 0)
-			{
-				System.out.println("Inner loop size = number of points in this bin: " + count);
-			}
-			
+			// iterate over next count points										
 			for(int j = firstElIndex; j < firstElIndex + count; j++)
 			{
 				// get the imageID of the retrieved point				

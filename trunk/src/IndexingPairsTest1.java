@@ -293,7 +293,7 @@ private static final int NUM_RUNS = 1; //100;
 		
 			int[] votes = kdTreeInstance.voteForImage(trainedTree, populatedTree, counts, imageFileName, IndexingPairsTest1.NUM_IMAGES_POPULATING); 
 				
-			System.out.println("\nImage " + queryImage + "has " + votes[queryImage] + " votes.");
+			System.out.println("\nImage " + queryImage + " has " + votes[queryImage] + " votes.");
 			System.out.println("In votes array, queryImage is located at position " + queryImage + " and has " + votes[queryImage] + " votes.");
 			
 			// we put all the image-votes pairs in a list and sort it
