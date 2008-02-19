@@ -196,7 +196,7 @@ public class ImageKeypointPairs implements Serializable
 			this.keyptPairArray = new KeypointPair[0];
 		}else
 		{
-			this.keyptPairArray = new KeypointPair[lastPosition - 1];
+			this.keyptPairArray = new KeypointPair[lastPosition];
 		}
 		
 		System.out.println("Number of singletons is: " + keyptArray.length);
