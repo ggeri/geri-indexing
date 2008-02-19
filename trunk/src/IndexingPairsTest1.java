@@ -33,6 +33,7 @@ private static final int NUM_RUNS = 1; //100;
 		System.out.println(stars + "\nCreate .pair.obj file for each image and store them to the disk. ");
 		KeypointPairsExtraction keyptPairExtract = new KeypointPairsExtraction(0);
 		
+		System.out.println("Reached exit with no problems");
 		System.exit(1);
 
 		//Get an instance of the KDTree class
