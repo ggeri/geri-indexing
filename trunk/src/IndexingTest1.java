@@ -194,7 +194,7 @@ private static final int NUM_RUNS = 1; //100;
 				System.arraycopy(dataSetPopulatingTemp, 0, dataSetPopulating, 0, dataSetPopulating.length);
 				dataSetPopulatingTemp = null;
 				
-				System.out.println("Number of images used for the dataSetPopulating is " + image);
+				System.out.println("Number of keypoints in dataSetPopulating " + dataSetPopulating.length/Keypoint.DESCRIPTOR_LENGTH);
 				
 			} catch(Exception e)
 			{
@@ -242,7 +242,7 @@ private static final int NUM_RUNS = 1; //100;
 					  		BufferedInputStream(new FileInputStream(imageIndecesName)));			   
 				  imageIndeces = (int[])in2.readObject();
 				  
-				  System.out.println("Read the data set for populating - its size is " + dataSetPopulating.length);
+				  System.out.println("Read dataSetPopulating for populating - its size is " + dataSetPopulating.length);
 				  System.out.println("Read the imageIndeces used for populating - imageIndeces.size is " + imageIndeces.length);
 				  
 				  in.close();
