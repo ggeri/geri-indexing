@@ -397,6 +397,8 @@ private static final int NUM_RUNS = 2549;
 			queryImage = queryImage + 4;
 		}
 		
+		System.out.println("Last image used is image " + (queryImage - 4));
+		
 		// Average number of votes for matching images 1, 2 and 3
 		int im1AvrgVotes = im1VotesSum / IndexingPairsTest1.NUM_RUNS;
 		int im2AvrgVotes = im2VotesSum / IndexingPairsTest1.NUM_RUNS;
