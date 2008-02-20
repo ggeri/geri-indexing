@@ -582,7 +582,7 @@ public class KDTree
 		// threshold for max distance between this query pt and points that we consider close enough
 		double threshold = 100000000000000000000000000.0;
 		// threshold on number of bins we want to look into to find reasonably close points to this query point
-		int maxBins = 35; 
+		int maxBins = 2; 
 		
 		// get all the bins tha contain points 'reasonably' close to the query point		
 		Vector<Integer> binIDs = this.bestBinFirst(trainedTree, queryPoint, threshold, maxBins);
