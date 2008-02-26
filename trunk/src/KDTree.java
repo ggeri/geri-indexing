@@ -52,10 +52,14 @@ public class KDTree
 			{
 				throw new Exception("Dimension picked is outside expected bounds (bounds of the descriptor length");
 			}
-			
+			/*
 			// find the mean value along this dimension
 			double splitPt = this.pickSplitPoint(pointsSet, leftInd, rightInd, dim);			
-			
+			*/
+
+			// find the sliding midpoint along this dimension
+			double splitPt = this.pickSplitPointSliding(pointsSet, leftInd, rightInd, dim, dimBounds);
+
 			// find the highest value <= splitPt
 			int splitPtInd = this.getSplitPtIndex(pointsSet, leftInd, rightInd, dim, splitPt);
 			if (splitPtInd < leftInd || splitPtInd > rightInd)
@@ -228,6 +232,53 @@ public class KDTree
 		return mean;
 	}
 	
+	/**
+	 * This method is used to pick the split point along the chosen dimension.
+	 * It takes as arguments the set of points and the dimension to split along
+	 * and it returns the split point. The split is in the center, unless that
+	 * would leave all the points to one side. In that case, the split is shifted
+	 * so that there is at least one point on each side.
+	 * @param pointsSet
+	 * @param dim
+	 * @return
+	 */
+	private double pickSplitPointSliding(short[] pointsSet, int leftInd, int rightInd, int dim, double[] dimBounds)
+	{
+		
+		// find the min and max values in this dimension	
+		double currVal, minVal, maxVal;
+		minVal = pointsSet[leftInd*Keypoint.DESCRIPTOR_LENGTH + dim];
+		maxVal = minVal;				
+		for(int i = leftInd+1; i <= rightInd; i++)
+		{
+			currVal = pointsSet[i*Keypoint.DESCRIPTOR_LENGTH + dim];
+			if (currVal < minVal)
+			{
+				minVal = currVal;
+			}
+			else if (currVal > maxVal)
+			{
+				maxVal = currVal;
+			}
+		}
+
+		// find the midpoint
+		double midpt = (dimBounds[dim] + dimBounds[dim + Keypoint.DESCRIPTOR_LENGTH])/2;
+
+		// shift if needed
+		if (midpt < minVal)
+		{
+			midpt = minVal;
+		}
+		else if (midpt > maxVal)
+		{
+			midpt = maxVal;
+		}
+		
+		// all done
+		return midpt;
+	}
+
 	/**
 	 * Given the pointsSet, the dimension and the splitPoint, this method returns the index of 
 	 * a point in the pointsSet along the given dimension that is the closest value less than or equal to splitPt
