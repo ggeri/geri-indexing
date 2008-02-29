@@ -79,7 +79,7 @@ public class ImageKeypoints implements Serializable
 						int off = j * 12;									
 						for(int m = 0; m < parsedLine.length; m++)  // for .pkey file, change m to m=1
 						{						
-							int off2 = off + m -1;
+							int off2 = off + m; // use m-1 fir .pkey files
 							wholeParsedLine[off2] = parsedLine[m];	
 						}												
 					}
