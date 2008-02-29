@@ -86,6 +86,7 @@ public class ImageKeypoints implements Serializable
 					short[] descr = new short[Keypoint.DESCRIPTOR_LENGTH];				
 					for (int k = 0; k < Keypoint.DESCRIPTOR_LENGTH; k++)
 					{										
+						System.out.println(wholeParsedLine[k]);
 						descr[k] = Short.parseShort(wholeParsedLine[k]);
 					}
 					//set the vector in the object				
