@@ -48,6 +48,7 @@ public class KeypointsExtraction
 			String imagePGM = KeypointsExtraction.imagePath + "ukbench" + formatter.format(i) + ".pgm";		
 			String fileNameKEY = KeypointsExtraction.imagePath + "ukbench" + formatter.format(i) + ".key";
 			String fileNamePKEY = KeypointsExtraction.imagePath + "ukbench" + formatter.format(i) + ".pkey";
+			String fileNamePCAKEY = KeypointsExtraction.imagePath + "ukbench" + formatter.format(i) + ".pca.key";
 			String fileNameOBJ = KeypointsExtraction.imagePath + "ukbench" + formatter.format(i) + ".obj";
 			
 			// extracts keypoints from the images
@@ -57,7 +58,7 @@ public class KeypointsExtraction
 			//this.generatePKEYfile(imagePGM, fileNameKEY, fileNamePKEY);						
 			
 			// creates the files that represent the sets of keypoints (one file per image).
-			this.generateOBJFile(fileNamePKEY, fileNameOBJ);
+			this.generateOBJFile(fileNamePCAKEY, fileNameOBJ);
 			
 			// remove .key files		
 			//this.deleteFile(fileNameKEY);				
@@ -165,6 +166,7 @@ public class KeypointsExtraction
 	
 	/**
 	 * This method is used to create the .obj files that represent the keypoints.
+	 * It takes as a parameter the .pkey or .pcakey file -  and it acts the same on both.
 	 * Each file is written on the disk as a serialized object and it represents
 	 * all the keypoints found in an image. The file has extension .ojb.	 
 	 */
