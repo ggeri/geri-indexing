@@ -31,9 +31,7 @@ private static final int NUM_RUNS = 2550;
 		 * to .key files and finally reads thesefiles and creates serialized javaobjects on the disk.
 		 */
 		System.out.println(stars + "\nCreate .obj file for each image and store them to the disk. ");
-		KeypointsExtraction keyptExtract = new KeypointsExtraction();		
-		
-		System.exit(0);
+		//KeypointsExtraction keyptExtract = new KeypointsExtraction();				
 		
 		//Get an instance of the KDTree class		 
 		KDTree kdTreeInstance = new KDTree();
