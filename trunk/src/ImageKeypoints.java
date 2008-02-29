@@ -77,7 +77,7 @@ public class ImageKeypoints implements Serializable
 						parsedLine = line.split("\\s");			
 
 						int off = j * 12;									
-						for(int m = 1; m < parsedLine.length; m++)
+						for(int m = 0; m < parsedLine.length; m++)  // for .pkey file, change m to m=1
 						{						
 							int off2 = off + m -1;
 							wholeParsedLine[off2] = parsedLine[m];	
