@@ -52,13 +52,12 @@ public class KDTree
 			{
 				throw new Exception("Dimension picked is outside expected bounds (bounds of the descriptor length");
 			}
-			/*
+		
 			// find the mean value along this dimension
 			double splitPt = this.pickSplitPoint(pointsSet, leftInd, rightInd, dim);			
-			*/
 
 			// find the sliding midpoint along this dimension
-			double splitPt = this.pickSplitPointSliding(pointsSet, leftInd, rightInd, dim, dimBounds);
+			//double splitPt = this.pickSplitPointSliding(pointsSet, leftInd, rightInd, dim, dimBounds);
 
 			// find the highest value <= splitPt
 			int splitPtInd = this.getSplitPtIndex(pointsSet, leftInd, rightInd, dim, splitPt);
@@ -254,11 +253,11 @@ public class KDTree
 			currVal = pointsSet[i*Keypoint.DESCRIPTOR_LENGTH + dim];
 			if (currVal < minVal)
 			{
-				minVal = currVal;
+				minVal = currVal+0.5;
 			}
 			else if (currVal > maxVal)
 			{
-				maxVal = currVal;
+				maxVal = currVal-0.5;
 			}
 		}
 
