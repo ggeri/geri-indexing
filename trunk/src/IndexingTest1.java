@@ -10,8 +10,8 @@ public class IndexingTest1 {
  * true = the tree will be trained 
  * false = the tree will be read from the disk - if there is a file with the specified name on the disk.
  */
-private static boolean train = false;	
-private static boolean populate = false;
+private static boolean train = true;	
+private static boolean populate = true;
 
 // if there is apporximatelly 2000 points per image, then the number of bins is (num_images*2000)/bin_size
 private static final int NUM_LEAFS_IN_TRAINED_TREE = (KeypointsExtraction.NUM_IMAGES * 2000)/KDTree.THRESHOLD; //1000000;
@@ -103,7 +103,7 @@ private static final int NUM_RUNS = 2550;
 				System.out.println("Training time for the tree: " +  (((timeEnd - timeStart)/1000)/60) + "min");						
 	
 				// write the trained tree to the disk under the name trainedTreeSingl.obj
-				String trainedTreeName = "trainedTreeSingl.obj";
+				String trainedTreeName = "trainedTreeSinglFullDim.obj";
 				File trainedTreeFile = new File(trainedTreeName);
 
 				ObjectOutputStream out = new ObjectOutputStream(new
@@ -122,7 +122,7 @@ private static final int NUM_RUNS = 2550;
 	    	  System.out.println("in else statement");
 	    	  
 	    	  System.out.println(stars + "\nReading the trained tree from the disk. ");
-	    	  String trainedTreeName = "trainedTreeSingl.obj";	
+	    	  String trainedTreeName = "trainedTreeSinglFullDim.obj";	
 			  File trainedTreeFile = new File(trainedTreeName);
 			  try{
 			  ObjectInputStream in = new ObjectInputStream(new
@@ -208,7 +208,7 @@ private static final int NUM_RUNS = 2550;
 			try
 			{
 				// write the data set for populating to the disk under the name opopulateDataSet.obj
-				String populateDataSetName = "dataForTreePopulatingSingl.obj";
+				String populateDataSetName = "dataForTreePopulatingSinglFullDim.obj";
 				File populateDataSetFile = new File(populateDataSetName);
 				ObjectOutputStream out = new ObjectOutputStream(new
 						BufferedOutputStream(new FileOutputStream(populateDataSetFile)));
@@ -216,7 +216,7 @@ private static final int NUM_RUNS = 2550;
 				out.close();
 				
 	            // write the imageIndeces to the disk under the name imageIndeces.obj
-				String imageIndecesName = "imageIndecesSingl.obj";
+				String imageIndecesName = "imageIndecesSinglFullDim.obj";
 				File imageIndecesFile = new File(imageIndecesName);	
 				ObjectOutputStream out2 = new ObjectOutputStream(new
 						BufferedOutputStream(new FileOutputStream(imageIndecesFile)));
@@ -231,8 +231,8 @@ private static final int NUM_RUNS = 2550;
 		}else
 		{
 			System.out.println(stars + "\nReading the data set for populating the tree from the disk. ");
-	    	  String populateDataSetName = "dataForTreePopulatingSingl.obj";				  
-			  String imageIndecesName = "imageIndecesSingl.obj";	
+	    	  String populateDataSetName = "dataForTreePopulatingSinglFullDim.obj";				  
+			  String imageIndecesName = "imageIndecesSinglFullDim.obj";	
 			  
 			  try{
 				  ObjectInputStream in = new ObjectInputStream(new
@@ -306,7 +306,7 @@ private static final int NUM_RUNS = 2550;
 			// get the path names from the Paths class
 			//String imageFileName = Path.imageSinglObj + "ukbench" + formatter.format(queryImage) + ".obj";
 			
-			String imageFileName = Path.fileSinglMix05OBJ_3 + "imagemix" + formatter.format(queryImage) + ".obj";
+			String imageFileName = Path.fileSinglOBJ_4 + "ukbench" + formatter.format(queryImage) + ".obj";
 			
 			double[] votes = kdTreeInstance.voteForImageWithWeightsAndDensityWithStats(trainedTree, 
 					populatedTree, counts, imageFileName, IndexingTest1.NUM_IMAGES_POPULATING, stats); 									

@@ -25,7 +25,7 @@ public class KeypointsExtraction
 	
 	public KeypointsExtraction()
 	{
-		for(int i = 3; i < KeypointsExtraction.NUM_IMAGES; i=i+4)
+		for(int i = 0; i < KeypointsExtraction.NUM_IMAGES; i++)
 		{	
 			//progress
 			if((i % 100) == 0) 
@@ -41,8 +41,10 @@ public class KeypointsExtraction
 			//String fileNamePKEY = Path.fileNamePKEY + "ukbench" + formatter.format(i) + ".pkey";
 			//String fileNamePCAKEY = Path.fileNamePCAKEY + "ukbench" + formatter.format(i) + ".pca.key";
 					
-			String fileNamePAIRPCAKEY = Path.fileSinglMix05PCAKEY_3 + "imagemix" + formatter.format(i) + ".pca.key";
-			String fileNameOBJ = Path.fileSinglMix05OBJ_3 + "imagemix" + formatter.format(i) + ".obj";
+			//String fileNamePAIRPCAKEY = Path.fileSinglMix05PCAKEY_3 + "imagemix" + formatter.format(i) + ".pca.key";
+			//String fileNameOBJ = Path.fileSinglMix05OBJ_3 + "imagemix" + formatter.format(i) + ".obj";
+			String fileNameKEY = Path.fileSinglKEY_4 + "ukbench" + formatter.format(i) + ".key";
+			String fileNameOBJ = Path.fileSinglOBJ_4 + "ukbench" + formatter.format(i) + ".obj";
 			
 			// extracts keypoints from the images
 			//this.generateKEYFile(imageJPG, imagePGM, fileNameKEY);		
@@ -51,7 +53,7 @@ public class KeypointsExtraction
 			//this.generatePKEYfile(imagePGM, fileNameKEY, fileNamePKEY);						
 			
 			// creates the files that represent the sets of keypoints (one file per image).
-			this.generateOBJFile(fileNamePAIRPCAKEY, fileNameOBJ);
+			this.generateOBJFile(fileNameKEY, fileNameOBJ);
 			
 			// remove .key files		
 			//this.deleteFile(fileNameKEY);				
@@ -256,7 +258,7 @@ public class KeypointsExtraction
 		short[] dataSet = new short[0];
 		
 		// get the path names from the path class		
-		String objFileName = Path.fileSinglOBJ_3 + "ukbench" + formatter.format(imageNum) + ".obj";
+		String objFileName = Path.fileSinglOBJ_4 + "ukbench" + formatter.format(imageNum) + ".obj";
 		
 		// System.out.println(objFileName);
 					
