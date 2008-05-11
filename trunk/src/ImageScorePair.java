@@ -8,15 +8,15 @@
 public class ImageScorePair 
 {
 	int imageNo;
-	int score;
+	double score;
 	
-	public ImageScorePair(int no, int score)
+	public ImageScorePair(int no, double score)
 	{
 		this.imageNo = no;
 		this.score = score;
 	}
 	
-	public int getScore()
+	public double getScore()
 	{
 		return this.score;
 	}

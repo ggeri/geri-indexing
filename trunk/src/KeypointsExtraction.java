@@ -18,15 +18,6 @@ public class KeypointsExtraction
 	public static final int NUM_IMAGES = 10200;
 	
 	/**
-	 * The home directory.
-	 */
-	public static String homeDir = "/h/291/geri";
-	public static String slash = System.getProperty("file.separator");
-	 
-	public static String imagePath = KeypointsExtraction.homeDir + KeypointsExtraction.slash + "workspace" + KeypointsExtraction.slash +
-			"images" + KeypointsExtraction.slash + "ukbenchImages" + KeypointsExtraction.slash;
-	
-	/**
 	 * Maps that holds all the image file names and gives the mapping
 	 * from these names to image ids (index of the file name in this vector)
 	 */
@@ -34,7 +25,7 @@ public class KeypointsExtraction
 	
 	public KeypointsExtraction()
 	{
-		for(int i = 0; i < KeypointsExtraction.NUM_IMAGES; i++)
+		for(int i = 3; i < KeypointsExtraction.NUM_IMAGES; i=i+4)
 		{	
 			//progress
 			if((i % 100) == 0) 
@@ -44,12 +35,14 @@ public class KeypointsExtraction
 			
 			NumberFormat formatter = new DecimalFormat("00000");
 		
-			String imageJPG = KeypointsExtraction.imagePath + "ukbench" + formatter.format(i) + ".jpg ";	
-			String imagePGM = KeypointsExtraction.imagePath + "ukbench" + formatter.format(i) + ".pgm";		
-			String fileNameKEY = KeypointsExtraction.imagePath + "ukbench" + formatter.format(i) + ".key";
-			String fileNamePKEY = KeypointsExtraction.imagePath + "ukbench" + formatter.format(i) + ".pkey";
-			String fileNamePCAKEY = KeypointsExtraction.imagePath + "ukbench" + formatter.format(i) + ".pca.key";
-			String fileNameOBJ = KeypointsExtraction.imagePath + "ukbench" + formatter.format(i) + ".obj";
+			//String imageJPG = Path.imageJPG + "ukbench" + formatter.format(i) + ".jpg ";	
+			//String imagePGM = Path.imagePGM + "ukbench" + formatter.format(i) + ".pgm";		
+			//String fileNameKEY = Path.fileNameKEY + "ukbench" + formatter.format(i) + ".key";
+			//String fileNamePKEY = Path.fileNamePKEY + "ukbench" + formatter.format(i) + ".pkey";
+			//String fileNamePCAKEY = Path.fileNamePCAKEY + "ukbench" + formatter.format(i) + ".pca.key";
+					
+			String fileNamePAIRPCAKEY = Path.fileSinglMix05PCAKEY_3 + "imagemix" + formatter.format(i) + ".pca.key";
+			String fileNameOBJ = Path.fileSinglMix05OBJ_3 + "imagemix" + formatter.format(i) + ".obj";
 			
 			// extracts keypoints from the images
 			//this.generateKEYFile(imageJPG, imagePGM, fileNameKEY);		
@@ -58,7 +51,7 @@ public class KeypointsExtraction
 			//this.generatePKEYfile(imagePGM, fileNameKEY, fileNamePKEY);						
 			
 			// creates the files that represent the sets of keypoints (one file per image).
-			this.generateOBJFile(fileNamePCAKEY, fileNameOBJ);
+			this.generateOBJFile(fileNamePAIRPCAKEY, fileNameOBJ);
 			
 			// remove .key files		
 			//this.deleteFile(fileNameKEY);				
@@ -80,7 +73,7 @@ public class KeypointsExtraction
 		for(int i = 0; i < KeypointsExtraction.NUM_IMAGES; i++)
 		{
 			NumberFormat formatter = new DecimalFormat("00000");
-			String fileNameOBJ = KeypointsExtraction.imagePath + "ukbench" + formatter.format(i) + ".obj";
+			String fileNameOBJ = Path.fileSinglOBJ_1 + "ukbench" + formatter.format(i) + ".obj";
 			KeypointsExtraction.nameIdMap.add(fileNameOBJ);
 		}
 	}
@@ -94,11 +87,11 @@ public class KeypointsExtraction
 	{		
 		NumberFormat formatter = new DecimalFormat("00000");
 		
-		String imageJPG = KeypointsExtraction.imagePath + "ukbench" + formatter.format(imageNum) + ".jpg ";	
-		String imagePGM = KeypointsExtraction.imagePath + "ukbench" + formatter.format(imageNum) + ".pgm";
-		String fileNameKEY = KeypointsExtraction.imagePath + "ukbench" + formatter.format(imageNum) + ".key";
-		String fileNamePKEY = KeypointsExtraction.imagePath + "ukbench" + formatter.format(imageNum) + ".pkey";
-		String fileNameOBJ = KeypointsExtraction.imagePath + "ukbench" + formatter.format(imageNum) + ".obj";
+		String imageJPG = Path.imageJPG + "ukbench" + formatter.format(imageNum) + ".jpg ";	
+		String imagePGM = Path.imagePGM + "ukbench" + formatter.format(imageNum) + ".pgm";
+		String fileNameKEY = Path.fileSinglKEY_2 + "ukbench" + formatter.format(imageNum) + ".key";
+		String fileNamePKEY = Path.fileSinglPKEY_1 + "ukbench" + formatter.format(imageNum) + ".pkey";
+		String fileNameOBJ = Path.fileSinglOBJ_1 + "ukbench" + formatter.format(imageNum) + ".obj";
 		
 		// extracts keypoints from the images
 		//this.generateKEYFile(imageJPG, imagePGM, fileNameKEY);			
@@ -261,8 +254,12 @@ public class KeypointsExtraction
 		NumberFormat formatter = new DecimalFormat("00000");
 		
 		short[] dataSet = new short[0];
-		String objFileName =KeypointsExtraction.imagePath + "ukbench" + formatter.format(imageNum) + ".obj";	
-			
+		
+		// get the path names from the path class		
+		String objFileName = Path.fileSinglOBJ_3 + "ukbench" + formatter.format(imageNum) + ".obj";
+		
+		// System.out.println(objFileName);
+					
 		File objFile = new File(objFileName);		
 		try
 		{						
@@ -307,7 +304,7 @@ public class KeypointsExtraction
 		for(int k = 0; k < KeypointsExtraction.NUM_IMAGES; k++)
 		{
 			NumberFormat formatter = new DecimalFormat("00000");
-			String objFileName = KeypointsExtraction.imagePath + "ukbench" + formatter.format(k) + ".obj";			
+			String objFileName = Path.fileSinglOBJ_1 + "ukbench" + formatter.format(k) + ".obj";			
 			
 			File objFile = new File(objFileName);		
 			try

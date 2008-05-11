@@ -54,10 +54,10 @@ public class KDTree
 			}
 		
 			// find the mean value along this dimension
-			double splitPt = this.pickSplitPoint(pointsSet, leftInd, rightInd, dim);			
+			//double splitPt = this.pickSplitPoint(pointsSet, leftInd, rightInd, dim);			
 
 			// find the sliding midpoint along this dimension
-			//double splitPt = this.pickSplitPointSliding(pointsSet, leftInd, rightInd, dim, dimBounds);
+			double splitPt = this.pickSplitPointSliding(pointsSet, leftInd, rightInd, dim, dimBounds);
 
 			// find the highest value <= splitPt
 			int splitPtInd = this.getSplitPtIndex(pointsSet, leftInd, rightInd, dim, splitPt);
@@ -265,13 +265,13 @@ public class KDTree
 		double midpt = (dimBounds[dim] + dimBounds[dim + Keypoint.DESCRIPTOR_LENGTH])/2;
 
 		// shift if needed
-		if (midpt < minVal)
+		if (midpt <= minVal)
 		{
-			midpt = minVal;
+			midpt = minVal + 0.5;
 		}
-		else if (midpt > maxVal)
+		else if (midpt >= maxVal)
 		{
-			midpt = maxVal;
+			midpt = maxVal - 0.5;
 		}
 		
 		// all done
@@ -374,20 +374,24 @@ public class KDTree
 	 * @param maxBins
 	 * @return 
 	 */
-	public Vector<Integer> bestBinFirst(Vector tree, Keypoint query, double threshold, int maxBins)
+	public Vector<Integer> bestBinFirst(Vector tree, double[] distances, Keypoint query, double threshold, int maxBins)
 	{
 		short[] queryPt = query.getDescriptor();
-		Vector<Integer> binIDs = new Vector<Integer>(maxBins);					
+		Vector<Integer> binIDs = new Vector<Integer>(maxBins);	
+		
 		PriorityQueue<PQElement> pq = new PriorityQueue<PQElement>();
 		Node root = (Node)tree.get(0); 
 		pq.add(new PQElement(root, 0));
+		int i = 0;
 		while(binIDs.size() < maxBins && !pq.isEmpty())		//size() starts at 0 so we need < maxBins
 		{
 			PQElement el = (PQElement)pq.poll();
 			Node nodeID = el.getNodeID();
 			double distance = el.getPriority();
 			int binId = this.bestBinFirstNode(tree, queryPt, pq, nodeID, distance, threshold);
-			binIDs.add(new Integer(binId));		
+			binIDs.add(new Integer(binId));
+			distances[i] = distance;
+			i++;
 		}
 		// trim vector binIDs to its actual size
 		binIDs.trimToSize();
@@ -512,6 +516,7 @@ public class KDTree
 		
 		// populate 'counts' vector in advance
 		int numBins = this.mapLeafsToBins(trainedTree);
+		System.out.println("Number of bins (leaf nodes) in this tree " + numBins + "\n");
 		for(int k = 0; k < numBins; k++)
 		{
 			CountIndexPair pair = new CountIndexPair();
@@ -519,8 +524,6 @@ public class KDTree
 		}
 		// trim the counts vector to its actual size
 		counts.trimToSize();	
-		
-		System.out.println("Size of imageIDs is " + imageIDs.length + "\n");
 		
 		int nextElIndx = 0;
 		// loop over dataSetPopulating array and process each keypoint (keypt size is 36 - step is 36)
@@ -626,16 +629,16 @@ public class KDTree
 	 * It returns the vector with that number of elements equal to the number of images where
 	 * element at index i represents the image with imageID = i.
 	 */	
-	public void voteForPoint(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
-			Keypoint queryPoint, int queryPtID, Vector<CountIndexPair> counts, int[] votes, int[] lastQueryPtVoted)
+	public void voteForPointOneVotePerImage(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
+			Keypoint queryPoint, int queryPtID, Vector<CountIndexPair> counts, double[] votes, int[] lastQueryPtVoted)
 	{				
 		// threshold for max distance between this query pt and points that we consider close enough
 		double threshold = 100000000000000000000000000.0;
 		// threshold on number of bins we want to look into to find reasonably close points to this query point
-		int maxBins = 25; 
+		int maxBins = 25;
 		
 		// get all the bins tha contain points 'reasonably' close to the query point		
-		Vector<Integer> binIDs = this.bestBinFirst(trainedTree, queryPoint, threshold, maxBins);
+		Vector<Integer> binIDs = this.bestBinFirst(trainedTree, new double[maxBins], queryPoint, threshold, maxBins);
 		
 		// iterate over all returned bins (the bins with 'close' points)				
 		for(int i = 0; i < binIDs.size(); i++)
@@ -666,18 +669,264 @@ public class KDTree
 		}	
 	}
 	
+	/*
+	 * This method does the voting given the populated tree, the trained tree, the query
+	 * point and the number of images.
+	 * It does not care if one point votes for multiple points in an image
+	 * It returns the vector with that number of elements equal to the number of images where
+	 * element at index i represents the image with imageID = i.
+	 */	
+	public void voteForPoint(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
+			Keypoint queryPoint, int queryPtID, Vector<CountIndexPair> counts, double[] votes)
+	{				
+		// threshold for max distance between this query pt and points that we consider close enough
+		double threshold = 100000000000000000000000000.0;
+		// threshold on number of bins we want to look into to find reasonably close points to this query point
+		int maxBins = 25;
+		
+		// get all the bins tha contain points 'reasonably' close to the query point		
+		Vector<Integer> binIDs = this.bestBinFirst(trainedTree, new double[maxBins], queryPoint, threshold, maxBins);
+		
+		// iterate over all returned bins (the bins with 'close' points)				
+		for(int i = 0; i < binIDs.size(); i++)
+		{
+			// for each bin, iterate over its points and vote for 
+			// the images where those points belong to
+			
+			// get a bin
+			int binID = binIDs.get(i);
+			// get its count and index of its first element
+			int count = counts.get(binID).getCount();
+			int firstElIndex = counts.get(binID).getIndex();
+			
+			// go into the populated tree, go to the point at index firstElIndex and 
+			// iterate over next count points										
+			for(int j = firstElIndex; j < firstElIndex + count; j++)
+			{
+				// get the imageID of the retrieved point				
+				int imageID = (populatedTree.getImageIDs())[j];
+				
+				// vote for the image imageID				
+				//if(lastQueryPtVoted[imageID] != queryPtID)
+				//{
+					votes[imageID]++;
+				//	lastQueryPtVoted[imageID] = queryPtID;					
+				//}						
+			}			
+		}	
+	}
 	
+	/*
+	 * This method does the voting given the populated tree, the trained tree, the query
+	 * point and the number of images.
+	 * It does not care if one point votes for multiple points in an image and it weights the votes
+	 * according to the distance of the query point to the retrieved bins (where retrieved points belong).
+	 * It returns the vector with that number of elements equal to the number of images where
+	 * element at index i represents the image with imageID = i.
+	 */	
+	public void voteForPointWithWeights(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
+			Keypoint queryPoint, int queryPtID, Vector<CountIndexPair> counts, double[] votes)
+	{				
+		// threshold for max distance between this query pt and points that we consider close enough
+		double threshold = 100000000000000000000000000.0;
+		// threshold on number of bins we want to look into to find reasonably close points to this query point
+		int maxBins = 25;
+		// variance for weighting the votes
+		double variance = 1 * 1;	 // TO DO: fix	(it was 5000*5000)
+		
+		// array of squared distances from query point to each of the returned bins
+		double[] distances = new double[maxBins];		
+		// get all the bins tha contain points 'reasonably' close to the query point		
+		Vector<Integer> binIDs = this.bestBinFirst(trainedTree, distances, queryPoint, threshold, maxBins);
+		
+		// iterate over all returned bins (the bins with 'close' points)				
+		for(int i = 0; i < binIDs.size(); i++)
+		{
+			// for each bin, iterate over its points and vote for 
+			// the images where those points belong to
+			// the closer bins get more weight
+			
+			// get a bin
+			int binID = binIDs.get(i);
+			// get its distance from the query point i.e. set the weights for the points in this bin
+			// this weight will apply for all the points in this bin
+			double distance = distances[i];	// this is the squared distance
+			double weight = Math.exp(-distance/variance);
+			
+			// get its count and index of its first element
+			int count = counts.get(binID).getCount();
+			int firstElIndex = counts.get(binID).getIndex();
+			
+			// go into the populated tree, go to the point at index firstElIndex and 
+			// iterate over next count points										
+			for(int j = firstElIndex; j < firstElIndex + count; j++)
+			{
+				// get the imageID of the retrieved point				
+				int imageID = (populatedTree.getImageIDs())[j];
+				
+				// vote for the image imageID				
+				//if(lastQueryPtVoted[imageID] != queryPtID)
+				//{
+					votes[imageID] = votes[imageID] + weight;
+				//	lastQueryPtVoted[imageID] = queryPtID;					
+				//}						
+			}			
+		}	
+	}
+	
+	/*
+	 * This method does the voting given the populated tree, the trained tree, the query
+	 * point and the number of images. The last argument 'stats' contains statistics on distribution of points 
+	 * in first 4 bins when voting.
+	 * It does not care if one point votes for multiple points in an image and it weights the votes
+	 * according to the distance of the query point to the retrieved bins (where retrieved points belong).
+	 * It also accounts for density of the bins retrieved by the best bin first search in the following way:
+	 * it first calculates the density estimate for the bins retrieved by the best bin first search - it has a 
+	 * wide normal distribution and it applies it to each point in the retrieved bins. Then it calculates weight 
+	 * according to a narrower normal distribution and divides that weight by the density estimate. That way the 
+	 * votes in the dense area are downweighted by the amount of density in that area.
+	 * It returns the vector with that number of elements equal to the number of images where
+	 * element at index i represents the image with imageID = i.
+	 */	
+	public void voteForPointWithWeightsAndDensityWithStats(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
+			Keypoint queryPoint, int queryPtID, Vector<CountIndexPair> counts, double[] votes, double[] stats)
+	{				
+		// threshold for max distance between this query pt and points that we consider close enough
+		double threshold = 100000000000000000000000000.0;
+		// threshold on number of bins we want to look into to find reasonably close points to this query point
+		int maxBins = 200;
+		// variance for weighting the votes
+		double varianceWide = 2000 * 2000;	 
+		double varianceNarrow = 100 * 100;
+		
+		// increment the value of points that voted
+		stats[12]++;
+		
+		// array of squared distances from query point to each of the returned bins
+		double[] distances = new double[maxBins];		
+		// get all the bins tha contain points 'reasonably' close to the query point		
+		Vector<Integer> binIDs = this.bestBinFirst(trainedTree, distances, queryPoint, threshold, maxBins);
+		
+		// Calculate the valu for the density estimate
+		double densityEstimate = 0;	
+		
+		// iterate over all returned bins (the bins with 'close' points)
+		for(int i = 0; i < binIDs.size(); i++)
+		{
+			// for each bin, calculate its weight and multiply it
+			// by the number of points in the bin.
+			// then sum over all bins
+			
+			// get the bin
+			int binID = binIDs.get(i);
+			// get its distance from the query point i.e. set the weights for the points in this bin
+			// this weight will apply for all the points in this bin
+			double distance = distances[i];			
+			// get the number of points in this bin
+			int numPts = counts.get(binID).getCount();
+			double weight = Math.exp(-distance/varianceWide);
+			densityEstimate = densityEstimate + weight * numPts;
+			
+			// get statistics about few closest bins
+			// 1st bin
+			if(i == 0)
+			{	
+				stats[0] += weight;
+			}
+			
+			// 2nd bin
+			if(i == 1)
+			{
+				stats[1] += weight;
+			}
+			
+			// 3rd bin
+			if(i == 2)
+			{
+				stats[2] += weight;
+				
+			}
+			
+			// 4th bin or 200th bin
+			if(i == 199)
+			{
+				stats[3] += weight;
+			}
+			
+		}				
+		
+		// iterate over all returned bins (the bins with 'close' points)				
+		for(int i = 0; i < binIDs.size(); i++)
+		{
+			// for each bin, iterate over its points and vote for 
+			// the images where those points belong to
+			// the closer bins get more weight
+			
+			// get a bin
+			int binID = binIDs.get(i);
+			// get its distance from the query point i.e. set the weights for the points in this bin
+			// this weight will apply for all the points in this bin
+			double distance = distances[i];	// this is the squared distance
+			double weight = Math.exp(-distance/varianceNarrow) / Math.sqrt(densityEstimate);
+			
+			// get its count and index of its first element
+			int count = counts.get(binID).getCount();
+			int firstElIndex = counts.get(binID).getIndex();
+			
+			// go into the populated tree, go to the point at index firstElIndex and 
+			// iterate over next count points										
+			for(int j = firstElIndex; j < firstElIndex + count; j++)
+			{
+				// get the imageID of the retrieved point				
+				int imageID = (populatedTree.getImageIDs())[j];
+				
+				// vote for the image imageID				
+					votes[imageID] = votes[imageID] + weight;					
+			}
+			
+//			 get statistics about few closest bins
+			// 1st bin
+			if(i == 0)
+			{	
+				stats[4] += weight * Math.sqrt(densityEstimate);
+				stats[8] += weight;
+			}
+			
+			// 2nd bin
+			if(i == 1)
+			{
+				stats[5] += weight * Math.sqrt(densityEstimate);
+				stats[9] += weight;
+			}
+			
+			// 3rd bin
+			if(i == 2)
+			{
+				stats[6] += weight * Math.sqrt(densityEstimate);
+				stats[10] += weight;
+			}
+			
+			// 4th bin or 200th bin
+			if(i == 199)
+			{
+				stats[7] += weight * Math.sqrt(densityEstimate);
+				stats[11] += weight;
+			}			
+		}	
+		
+	}
 	
 	/*
 	 * This method does the voting given the populated tree, the trained tree, the image
 	 * and the number of images in total.
+	 * It makes sure that each query point votes only for one point in each image
 	 * It returns the vector with that number of elements equal to the number of images where
 	 * element at index i represents the image with imageID = i.
 	 */	
-	public int[] voteForImage(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
+	public double[] voteForImageOneVotePerImage(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
 			Vector<CountIndexPair> counts, String imageFileName, int numOfImages)
 	{
-		int[] votes = new int[numOfImages];
+		double[] votes = new double[numOfImages];
 		
 		// indeces corespond to imageIDs - this array tells us what is the last query point
 		// that voted for this image
@@ -718,7 +967,7 @@ public class KDTree
 			for(int queryPtID = 0; queryPtID < keyptArr.length; queryPtID++)
 			{
 				Keypoint queryPoint = keyptArr[queryPtID];
-				this.voteForPoint(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes, lastQueryPtVoted);
+				this.voteForPointOneVotePerImage(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes, lastQueryPtVoted);
 			}
 			in.close();
 			
@@ -733,7 +982,207 @@ public class KDTree
 		return votes;
 	}
 	
-
+	
+	/*
+	 * This method does the voting given the populated tree, the trained tree, the image
+	 * and the number of images in total.
+	 * It lets each query point votes for all polled points in an image and it weights those points
+	 * according to the distance of the query point to the retrieved bins (where retrieved points belong).
+	 * It returns the vector with that number of elements equal to the number of images where
+	 * element at index i represents the image with imageID = i.
+	 */	
+	public double[] voteForImageWithWeights(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
+			Vector<CountIndexPair> counts, String imageFileName, int numOfImages)
+	{
+		double[] votes = new double[numOfImages];
+		
+		// indeces corespond to imageIDs - this array tells us what is the last query point
+		// that voted for this image
+		// we don't want to allow one query point to vote for many points in an image so that one image 
+		// doesn't get too many votes due to many polled points in that image (this would happen if the
+		// image contains a pattern for example)
+		// we initialize all elements of lastQueryPtVoted to -1
+		//int[] lastQueryPtVoted = new int[numOfImages];
+		//for(int i = 0; i < lastQueryPtVoted.length; i++)
+		//{
+		//	lastQueryPtVoted[i] = -1;
+		//}
+		
+		// read the image that we are voting for
+		File objFile = new File(imageFileName);		
+		try
+		{						
+			ObjectInputStream in = new ObjectInputStream(new
+					BufferedInputStream(new FileInputStream(objFile)));
+			
+			ImageKeypoints imageKeypts;
+			ImageKeypointPairs imageKeyptPairs;
+			Keypoint[] keyptArr;			
+			
+			// get the all the keypoints or all the keypoint pairs 
+			// (depending on if it is .obj or .pair.obj file) from this image
+			if(imageFileName.endsWith(".pair.obj"))
+			{				
+				imageKeyptPairs = (ImageKeypointPairs)in.readObject();
+				keyptArr = imageKeyptPairs.getKeyptPairArray();
+			}else
+			{				
+				imageKeypts = (ImageKeypoints)in.readObject();
+				keyptArr = imageKeypts.getKeyptArray();
+			}							
+			
+			// vote for each keypoint in this image
+			for(int queryPtID = 0; queryPtID < keyptArr.length; queryPtID++)
+			{
+				Keypoint queryPoint = keyptArr[queryPtID];
+				this.voteForPointWithWeights(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes);
+			}
+			in.close();
+			
+		}catch (IOException ioe)
+		{
+		ioe.printStackTrace();
+		}
+		catch (ClassNotFoundException cnfe)
+		{ 
+			cnfe.printStackTrace();
+		}		
+		return votes;
+	}
+	
+	/*
+	 * This method does the voting given the populated tree, the trained tree, the image
+	 * and the number of images in total.
+	 * It lets each query point votes for all polled points in an image and it weights those points
+	 * according to the distance of the query point to the retrieved bins (where retrieved points belong).
+	 * It returns the vector with that number of elements equal to the number of images where
+	 * element at index i represents the image with imageID = i.
+	 */	
+	public double[] voteForImageWithWeightsAndDensityWithStats(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
+			Vector<CountIndexPair> counts, String imageFileName, int numOfImages, double[] stats)
+	{
+		double[] votes = new double[numOfImages];
+		
+		// indeces corespond to imageIDs - this array tells us what is the last query point
+		// that voted for this image
+		// we don't want to allow one query point to vote for many points in an image so that one image 
+		// doesn't get too many votes due to many polled points in that image (this would happen if the
+		// image contains a pattern for example)
+		// we initialize all elements of lastQueryPtVoted to -1
+		//int[] lastQueryPtVoted = new int[numOfImages];
+		//for(int i = 0; i < lastQueryPtVoted.length; i++)
+		//{
+		//	lastQueryPtVoted[i] = -1;
+		//}
+		
+		// read the image that we are voting for
+		File objFile = new File(imageFileName);		
+		try
+		{						
+			ObjectInputStream in = new ObjectInputStream(new
+					BufferedInputStream(new FileInputStream(objFile)));
+			
+			ImageKeypoints imageKeypts;
+			ImageKeypointPairs imageKeyptPairs;
+			Keypoint[] keyptArr;			
+			
+			// get the all the keypoints or all the keypoint pairs 
+			// (depending on if it is .obj or .pair.obj file) from this image
+			if(imageFileName.endsWith(".pair.obj"))
+			{				
+				imageKeyptPairs = (ImageKeypointPairs)in.readObject();
+				keyptArr = imageKeyptPairs.getKeyptPairArray();
+			}else
+			{				
+				imageKeypts = (ImageKeypoints)in.readObject();
+				keyptArr = imageKeypts.getKeyptArray();
+			}							
+			
+			// vote for each keypoint in this image
+			for(int queryPtID = 0; queryPtID < keyptArr.length; queryPtID++)
+			{
+				Keypoint queryPoint = keyptArr[queryPtID];
+				this.voteForPointWithWeightsAndDensityWithStats(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes, stats);
+			}
+			in.close();
+			
+		}catch (IOException ioe)
+		{
+		ioe.printStackTrace();
+		}
+		catch (ClassNotFoundException cnfe)
+		{ 
+			cnfe.printStackTrace();
+		}		
+		return votes;
+	}
+	
+	
+	/*
+	 * This method does the voting given the populated tree, the trained tree, the image
+	 * and the number of images in total.
+	 * It lets each query point votes for all polled points in an image
+	 * It returns the vector with that number of elements equal to the number of images where
+	 * element at index i represents the image with imageID = i.
+	 */	
+	public double[] voteForImage(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
+			Vector<CountIndexPair> counts, String imageFileName, int numOfImages)
+	{
+		double[] votes = new double[numOfImages];
+		
+		// indeces corespond to imageIDs - this array tells us what is the last query point
+		// that voted for this image
+		// we don't want to allow one query point to vote for many points in an image so that one image 
+		// doesn't get too many votes due to many polled points in that image (this would happen if the
+		// image contains a pattern for example)
+		// we initialize all elements of lastQueryPtVoted to -1
+		//int[] lastQueryPtVoted = new int[numOfImages];
+		//for(int i = 0; i < lastQueryPtVoted.length; i++)
+		//{
+		//	lastQueryPtVoted[i] = -1;
+		//}
+		
+		// read the image that we are voting for
+		File objFile = new File(imageFileName);		
+		try
+		{						
+			ObjectInputStream in = new ObjectInputStream(new
+					BufferedInputStream(new FileInputStream(objFile)));
+			
+			ImageKeypoints imageKeypts;
+			ImageKeypointPairs imageKeyptPairs;
+			Keypoint[] keyptArr;			
+			
+			// get the all the keypoints or all the keypoint pairs 
+			// (depending on if it is .obj or .pair.obj file) from this image
+			if(imageFileName.endsWith(".pair.obj"))
+			{				
+				imageKeyptPairs = (ImageKeypointPairs)in.readObject();
+				keyptArr = imageKeyptPairs.getKeyptPairArray();
+			}else
+			{				
+				imageKeypts = (ImageKeypoints)in.readObject();
+				keyptArr = imageKeypts.getKeyptArray();
+			}							
+			
+			// vote for each keypoint in this image
+			for(int queryPtID = 0; queryPtID < keyptArr.length; queryPtID++)
+			{
+				Keypoint queryPoint = keyptArr[queryPtID];
+				this.voteForPoint(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes);
+			}
+			in.close();
+			
+		}catch (IOException ioe)
+		{
+		ioe.printStackTrace();
+		}
+		catch (ClassNotFoundException cnfe)
+		{ 
+			cnfe.printStackTrace();
+		}		
+		return votes;
+	}
 	
 	/*
 	 * The method that calculates and returns the dimension bounds for the given data set.

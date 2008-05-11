@@ -8,21 +8,32 @@ import java.util.*;
 
 public class Scores 
 {
-	private LinkedList<ImageScorePair> scores;
+	private LinkedList<ImageScorePair> scoreList;		
 	
+	
+	// constructor
 	public Scores(LinkedList<ImageScorePair> scoresList)
 	{
-		this.scores = scoresList;
+		this.scoreList = scoresList;
 	}
 
-	public LinkedList<ImageScorePair> getScoresList()
+	// getter for 'scores' list
+	public LinkedList<ImageScorePair> getScoreList()
 	{
-		return this.scores;
+		return this.scoreList;
 	}
 	
+	// sorts the 'scores' list
+	public void sortDescending()
+	{
+		this.scoreList = this.mergeSort(this.scoreList);
+		
+	}
+	
+	// takes the Scores object and sorts it's list of scores
 	public Scores sortScores(Scores scores)
 	{
-		LinkedList<ImageScorePair> sortedList = this.mergeSort(scores.scores);
+		LinkedList<ImageScorePair> sortedList = this.mergeSort(scores.scoreList);
 		return new Scores(sortedList);
 	}
 	
@@ -93,5 +104,45 @@ public class Scores
 		}
 		
 		return mergedList;
+	}
+	
+	
+	// for testing
+	public static void main(String[] args)
+	{
+		test();
+	}
+	
+	private static void test()
+	{
+		LinkedList<ImageScorePair> scoreList = new LinkedList<ImageScorePair>();
+		ImageScorePair p1 = new ImageScorePair(0,3);
+		ImageScorePair p2 = new ImageScorePair(1,1);
+		ImageScorePair p3 = new ImageScorePair(2,5);		
+		scoreList.add(p1);
+		scoreList.add(p2);
+		scoreList.add(p3);
+		System.out.println("Unsorted");
+		for(int i = 0; i < 3; i++)
+		{
+			System.out.println(scoreList.get(i).getImageNo() + " " + scoreList.get(i).getScore());
+		}
+		
+		Scores scores = new Scores(scoreList);
+		scores.sortDescending();
+		LinkedList<ImageScorePair> scoreListSorted = scores.getScoreList();
+		System.out.println("Sorted");
+		for(int i = 0; i < 3; i++)
+		{
+			System.out.println(scoreListSorted.get(i).getImageNo() + " " + scoreListSorted.get(i).getScore());
+		}
+		scoreListSorted.remove(p3);
+		
+		System.out.println("Sorted without first element");
+		for(int i = 0; i < 3; i++)
+		{
+			System.out.println(scoreListSorted.get(i).getImageNo() + " " + scoreListSorted.get(i).getScore());
+		}
+		
 	}
 }

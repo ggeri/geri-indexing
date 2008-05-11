@@ -32,7 +32,7 @@ public class DisplayPairs
 		
 		NumberFormat formatter = new DecimalFormat("00000");
 		
-		String pairObjFileName =KeypointPairsExtraction.imagePathNoBackup + "ukbench" + formatter.format(imageNum) + ".pair.obj";
+		String pairObjFileName = Path.filePairOBJ_2 + "ukbench" + formatter.format(imageNum) + ".pair.obj";
 			
 		File pairObjFile1 = new File(pairObjFileName);
 		
