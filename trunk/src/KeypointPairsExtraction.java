@@ -47,8 +47,8 @@ public class KeypointPairsExtraction
 			//String fileNamePAIRPCAKEY = KeypointPairsExtraction.imagePathNoBackupMeaningPair10PcaKey + "ukbench" + formatter.format(i) + ".pair5.pca.key";
 			//String fileNamePAIROBJ = KeypointPairsExtraction.imagePathNoBackupMeaningObj + "ukbench" + formatter.format(i) + ".pair.obj";
 			
-			String fileNamePAIRPCAKEY = Path.filePairMix05PCAKEY_3 + "imagemix" + formatter.format(i) + ".pair.pca.key";
-			String fileNamePAIROBJ = Path.filePairMix05OBJ_3 + "imagemix" + formatter.format(i) + ".pair.obj";
+			String fileNamePAIRPCAKEY = Path.filePairMix05KEY_4 + "imagemix" + formatter.format(i) + ".pair.key";
+			String fileNamePAIROBJ = Path.filePairMix05OBJ_4 + "imagemix" + formatter.format(i) + ".pair.obj";
 			
 			// extracts keypoints from the images
 			// this.generateKEYFile(imageJPG, imagePGM, fileNameKEY);		

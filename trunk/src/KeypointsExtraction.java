@@ -259,6 +259,7 @@ public class KeypointsExtraction
 		
 		// get the path names from the path class		
 		String objFileName = Path.fileSinglOBJ_4 + "ukbench" + formatter.format(imageNum) + ".obj";
+		//String objFileName = Path.fileSinglOBJ_3 + "ukbench" + formatter.format(imageNum) + ".obj";
 		
 		// System.out.println(objFileName);
 					

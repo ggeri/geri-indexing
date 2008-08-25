@@ -35,11 +35,11 @@ private static final int NUM_RUNS = 2550;
 		/* Instantiate the KeypointsExtraction class - this converts jpg files to pgm, extracts the keypoints and saves them
 		 * to .key files and finally reads thesefiles and creates serialized javaobjects on the disk.
 		 */
-		//System.out.println(stars + "\nCreate .pair.obj file for each image and store them to the disk. ");
-		//KeypointPairsExtraction keyptPairExtract = new KeypointPairsExtraction();
-		
-		//System.out.println("Done creating obj files");
-		//System.exit(1);
+//		System.out.println(stars + "\nCreate .pair.obj file for each image and store them to the disk. ");
+//		KeypointPairsExtraction keyptPairExtract = new KeypointPairsExtraction();
+//		
+//		System.out.println("Done creating obj files");
+//		System.exit(1);
 
 		//Get an instance of the KDTree class
 		KDTree kdTreeInstance = new KDTree();

@@ -32,7 +32,7 @@ private static final int NUM_RUNS = 2550;
 		/* Instantiate the KeypointsExtraction class - this converts jpg files to pgm, extracts the keypoints and saves them
 		 * to .key files and finally reads thesefiles and creates serialized javaobjects on the disk.
 		 */
-		System.out.println(stars + "\nCreate .obj file for each image and store them to the disk. ");
+		//System.out.println(stars + "\nCreate .obj file for each image and store them to the disk. ");
 		//KeypointsExtraction keyptExtract = new KeypointsExtraction();
 		
 		//System.out.println("Done creating obj files");
@@ -104,6 +104,7 @@ private static final int NUM_RUNS = 2550;
 	
 				// write the trained tree to the disk under the name trainedTreeSingl.obj
 				String trainedTreeName = "trainedTreeSinglFullDim.obj";
+				//String trainedTreeName = "trainedTreeSingl.obj";
 				File trainedTreeFile = new File(trainedTreeName);
 
 				ObjectOutputStream out = new ObjectOutputStream(new
@@ -209,6 +210,7 @@ private static final int NUM_RUNS = 2550;
 			{
 				// write the data set for populating to the disk under the name opopulateDataSet.obj
 				String populateDataSetName = "dataForTreePopulatingSinglFullDim.obj";
+				//String populateDataSetName = "dataForTreePopulatingSingl.obj";
 				File populateDataSetFile = new File(populateDataSetName);
 				ObjectOutputStream out = new ObjectOutputStream(new
 						BufferedOutputStream(new FileOutputStream(populateDataSetFile)));
@@ -217,6 +219,7 @@ private static final int NUM_RUNS = 2550;
 				
 	            // write the imageIndeces to the disk under the name imageIndeces.obj
 				String imageIndecesName = "imageIndecesSinglFullDim.obj";
+				//String imageIndecesName = "imageIndecesSingl.obj";
 				File imageIndecesFile = new File(imageIndecesName);	
 				ObjectOutputStream out2 = new ObjectOutputStream(new
 						BufferedOutputStream(new FileOutputStream(imageIndecesFile)));
@@ -307,6 +310,7 @@ private static final int NUM_RUNS = 2550;
 			//String imageFileName = Path.imageSinglObj + "ukbench" + formatter.format(queryImage) + ".obj";
 			
 			String imageFileName = Path.fileSinglOBJ_4 + "ukbench" + formatter.format(queryImage) + ".obj";
+			//String imageFileName = Path.fileSinglOBJ_3 + "ukbench" + formatter.format(queryImage) + ".obj";
 			
 			double[] votes = kdTreeInstance.voteForImageWithWeightsAndDensityWithStats(trainedTree, 
 					populatedTree, counts, imageFileName, IndexingTest1.NUM_IMAGES_POPULATING, stats); 									

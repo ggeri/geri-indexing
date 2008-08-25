@@ -105,7 +105,7 @@ public class ImageKeypointPairs implements Serializable
 	 */
 	public void collectKeypointPairs(String fileName)
 	{		
-		this.keyptPairArray = this.getPairsFromPairPcaKey(fileName);
+		this.keyptPairArray = this.getPairsFromPairKey(fileName);
 	}
 	
 	
@@ -309,6 +309,87 @@ public class ImageKeypointPairs implements Serializable
 		return keyptPairArray;
 	}
 	
+	
+	/**
+	 * This method reads the file named by fileName and gets the pairs from it
+	 * It them populates with it the passed keyptPairArray.
+	 * @param fileName - the file to read the pairs from
+	 * @param keyptPairArray - the array of pairs to populate wtih paired keypoints
+	 */
+	
+	private KeypointPair[] getPairsFromPairKey(String fileName)
+	{
+		System.out.println(fileName);
+		KeypointPair[] keyptPairArray = null;
+		try
+		{
+			BufferedReader in = new BufferedReader(new FileReader(fileName));
+			String line = in.readLine();
+			String[] parsedLine = line.split("\\s");
+			int numOfPairs = Integer.parseInt(parsedLine[0]);
+			// initialize the keypoint array
+			keyptPairArray = new KeypointPair[numOfPairs];
+			
+			System.out.println("Num of pairs in this file: " + numOfPairs);
+			
+			for(int i = 0; i < numOfPairs; i++)				
+			{
+				KeypointPair pair = new KeypointPair();
+				//these are the location array values
+				line = in.readLine();			
+				parsedLine = line.split("\\s");
+				double[] locOne = new double[4];
+				double[] locTwo = new double[4];
+				for (int l = 0; l < 4; l++)
+				{
+					locOne[l] = Double.parseDouble(parsedLine[l]);
+				}
+				for (int l = 0, p = 4; l < 4; l++, p++)
+				{
+					locTwo[l] = Double.parseDouble(parsedLine[p]);
+				}
+				//set it in this instance of Keypoint class
+				pair.setKeyptLocations(locOne, locTwo);
+
+				// these are the descriptor array values
+				String[] wholeParsedLine = new String[Keypoint.DESCRIPTOR_LENGTH * 2];
+				
+				for (int j = 0; j < 13; j++)
+				{					
+					line = in.readLine();
+					if(line == null) System.out.println("line is null - point " + i);						
+					
+					parsedLine = line.split("\\s");			
+					int off = j * 20;									
+					for(int m = 0; m < parsedLine.length; m++) 
+					{						
+						int off2 = off + m; 
+						wholeParsedLine[off2] = parsedLine[m];	
+					}												
+				}
+				short[] descr = new short[Keypoint.DESCRIPTOR_LENGTH * 2];				
+				for (int k = 0; k < Keypoint.DESCRIPTOR_LENGTH * 2; k++)
+				{										
+					descr[k] = Short.parseShort(wholeParsedLine[k]);
+				}
+				//set the vector in the object				
+				pair.setDescriptor(descr);
+
+				//add the pt to array of points	
+				keyptPairArray[i] = pair;
+			}
+			in.close();
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return keyptPairArray;
+	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
