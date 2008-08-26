@@ -1,3 +1,4 @@
+package ca.utoronto.cs.kdtree.basic;
 /**
  * An instance of this class represents the pair that consists of the 'count' 
  * and 'index'. The count gives the number of the points contained in a bin and the index

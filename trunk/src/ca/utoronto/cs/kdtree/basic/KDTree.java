@@ -1,3 +1,4 @@
+package ca.utoronto.cs.kdtree.basic;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

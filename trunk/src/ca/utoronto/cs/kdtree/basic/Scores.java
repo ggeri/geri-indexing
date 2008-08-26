@@ -1,3 +1,4 @@
+package ca.utoronto.cs.kdtree.basic;
 /*
  * The class Scores represents a collection of ImageScorePairs. It has a private attribute 'scores' 
  * which is a linked list that contains all the ImageScorePairs passed to the constructor of this class.

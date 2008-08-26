@@ -1,3 +1,4 @@
+package ca.utoronto.cs.kdtree.basic;
 /**
  * This class represents a kd-tree leaf node. Each leaf node contains
  * the number that maps the leaf nodes to the bins that contain actual

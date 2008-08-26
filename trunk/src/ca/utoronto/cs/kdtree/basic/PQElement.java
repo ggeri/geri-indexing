@@ -1,3 +1,4 @@
+package ca.utoronto.cs.kdtree.basic;
 /**
  * An instance of this class represents an element that we put into the 
  * priority queue that is used for best-bin-first search. PQElement instance has 

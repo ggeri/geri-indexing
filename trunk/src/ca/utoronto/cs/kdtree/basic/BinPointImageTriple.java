@@ -1,3 +1,4 @@
+package ca.utoronto.cs.kdtree.basic;
 /**
  * An instance of this class represents the triple that consists of the bin
  * number, image number and point in that image. It has three attributes: binID, 

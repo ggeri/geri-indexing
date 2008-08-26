@@ -1,3 +1,4 @@
+package ca.utoronto.cs.kdtree.basic;
 /**
  * The class ImageScorePair represents a pair that consists of an image and its score.
  * It is used for the purpose of calculating scores.

@@ -1,3 +1,4 @@
+package ca.utoronto.cs.kdtree.basic;
 /**
  * This class contains only the static path variables for the whole indexing project
  */

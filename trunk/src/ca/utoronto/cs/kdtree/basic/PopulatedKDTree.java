@@ -1,3 +1,4 @@
+package ca.utoronto.cs.kdtree.basic;
 /**
  * The instance of this class represents the populated KD tree. It consists of three arrays: these are the points
  * ordered by the bins to which they belong. Points are represented as elements of the three arrays: first array 

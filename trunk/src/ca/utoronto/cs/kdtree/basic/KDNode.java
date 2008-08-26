@@ -1,3 +1,4 @@
+package ca.utoronto.cs.kdtree.basic;
 
 /**
  * This class represents a kd-tree inner node. Each inner node contains
