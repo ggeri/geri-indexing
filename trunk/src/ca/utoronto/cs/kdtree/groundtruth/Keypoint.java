@@ -26,7 +26,7 @@ public class Keypoint implements Serializable
 	/**
 	 * The length of the descriptor
 	 */
-	public static final int DESCRIPTOR_LENGTH = 128; // put back to 36
+	public static final int DESCRIPTOR_LENGTH = 36; 
 	
 	/**
 	 * Default constructor.

@@ -3,16 +3,16 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
-import ca.utoronto.cs.kdtree.basic.CountIndexPair;
-import ca.utoronto.cs.kdtree.basic.ImageScorePair;
-import ca.utoronto.cs.kdtree.basic.KDTree;
-import ca.utoronto.cs.kdtree.basic.Keypoint;
-import ca.utoronto.cs.kdtree.basic.KeypointSingleton;
-import ca.utoronto.cs.kdtree.basic.KeypointsExtraction;
-import ca.utoronto.cs.kdtree.basic.Node;
-import ca.utoronto.cs.kdtree.basic.Path;
-import ca.utoronto.cs.kdtree.basic.PopulatedKDTree;
-import ca.utoronto.cs.kdtree.basic.Scores;
+//import ca.utoronto.cs.kdtree.basic.CountIndexPair;
+//import ca.utoronto.cs.kdtree.basic.ImageScorePair;
+//import ca.utoronto.cs.kdtree.basic.KDTree;
+//import ca.utoronto.cs.kdtree.basic.Keypoint;
+//import ca.utoronto.cs.kdtree.basic.KeypointSingleton;
+//import ca.utoronto.cs.kdtree.basic.KeypointsExtraction;
+//import ca.utoronto.cs.kdtree.basic.Node;
+//import ca.utoronto.cs.kdtree.basic.Path;
+//import ca.utoronto.cs.kdtree.basic.PopulatedKDTree;
+//import ca.utoronto.cs.kdtree.basic.Scores;
 
 
 public class IndexingGroundTruthTest2 {
@@ -26,13 +26,13 @@ private static boolean train = true;
 private static boolean populate = true;
 
 // if there is apporximatelly 2000 points per image, then the number of bins is (num_images*2000)/bin_size
-private static final int NUM_LEAFS_IN_TRAINED_TREE = (KeypointsExtraction.NUM_IMAGES * 2000)/KDTree.THRESHOLD; //1000000;
+public static final int NUM_LEAFS_IN_TRAINED_TREE = (KeypointsExtraction.NUM_IMAGES * 2000)/KDTree.THRESHOLD; //1000000;
 // tree has three times more nodes then leafs
 private static final int NUM_NODES_IN_TRAINED_TREE = 3 * IndexingGroundTruthTest2.NUM_LEAFS_IN_TRAINED_TREE;
 private static final int NUM_PTS_TRAINING = 10000000;	
 private static final int NUM_IMAGES_TRAINING = 10200;
 private static final int NUM_IMAGES_POPULATING = 10200; 	// works with 1000 if heap set to 6144max & w/ flag -XX:-UseGCOverheadLimit
-private static final int NUM_RUNS = 2550;
+private static final int NUM_RUNS = 1;
 	
 	public static void main(String[] args)
 	{	
@@ -115,8 +115,8 @@ private static final int NUM_RUNS = 2550;
 				System.out.println("Training time for the tree: " +  (((timeEnd - timeStart)/1000)/60) + "min");						
 	
 				// write the trained tree to the disk under the name trainedTreeSingl.obj
-				String trainedTreeName = "trainedTreeSinglFullDim.obj";
-				//String trainedTreeName = "trainedTreeSingl.obj";
+				//String trainedTreeName = "trainedTreeSinglFullDim.obj";
+				String trainedTreeName = "trainedTreeSingl.obj";
 				File trainedTreeFile = new File(trainedTreeName);
 
 				ObjectOutputStream out = new ObjectOutputStream(new
@@ -135,7 +135,8 @@ private static final int NUM_RUNS = 2550;
 	    	  System.out.println("in else statement");
 	    	  
 	    	  System.out.println(stars + "\nReading the trained tree from the disk. ");
-	    	  String trainedTreeName = "trainedTreeSinglFullDim.obj";	
+	    	  //String trainedTreeName = "trainedTreeSinglFullDim.obj";
+	    	  String trainedTreeName = "trainedTreeSingl.obj";
 			  File trainedTreeFile = new File(trainedTreeName);
 			  try{
 			  ObjectInputStream in = new ObjectInputStream(new
@@ -221,8 +222,8 @@ private static final int NUM_RUNS = 2550;
 			try
 			{
 				// write the data set for populating to the disk under the name opopulateDataSet.obj
-				String populateDataSetName = "dataForTreePopulatingSinglFullDim.obj";
-				//String populateDataSetName = "dataForTreePopulatingSingl.obj";
+				//String populateDataSetName = "dataForTreePopulatingSinglFullDim.obj";
+				String populateDataSetName = "dataForTreePopulatingSingl.obj";
 				File populateDataSetFile = new File(populateDataSetName);
 				ObjectOutputStream out = new ObjectOutputStream(new
 						BufferedOutputStream(new FileOutputStream(populateDataSetFile)));
@@ -230,8 +231,8 @@ private static final int NUM_RUNS = 2550;
 				out.close();
 				
 	            // write the imageIndeces to the disk under the name imageIndeces.obj
-				String imageIndecesName = "imageIndecesSinglFullDim.obj";
-				//String imageIndecesName = "imageIndecesSingl.obj";
+				//String imageIndecesName = "imageIndecesSinglFullDim.obj";
+				String imageIndecesName = "imageIndecesSingl.obj";
 				File imageIndecesFile = new File(imageIndecesName);	
 				ObjectOutputStream out2 = new ObjectOutputStream(new
 						BufferedOutputStream(new FileOutputStream(imageIndecesFile)));
@@ -246,8 +247,10 @@ private static final int NUM_RUNS = 2550;
 		}else
 		{
 			System.out.println(stars + "\nReading the data set for populating the tree from the disk. ");
-	    	  String populateDataSetName = "dataForTreePopulatingSinglFullDim.obj";				  
-			  String imageIndecesName = "imageIndecesSinglFullDim.obj";	
+	    	  //String populateDataSetName = "dataForTreePopulatingSinglFullDim.obj";				  
+			  //String imageIndecesName = "imageIndecesSinglFullDim.obj";	
+			  String populateDataSetName = "dataForTreePopulatingSingl.obj";
+			  String imageIndecesName = "imageIndecesSingl.obj";
 			  
 			  try{
 				  ObjectInputStream in = new ObjectInputStream(new
@@ -295,24 +298,30 @@ private static final int NUM_RUNS = 2550;
 		
 		PopulatedKDTree populatedTree = kdTreeInstance.populateKDTree(trainedTree, dataSetPopulating, imageIDs, imageIndeces, counts);
 		
-//		Do NUM_RUNS run, vote and record ranks...		
-		double[] reciprocals = new double[IndexingGroundTruthTest2.NUM_RUNS * 3];
+		// Vote with one image and write out a text file named votingInfoIm0.txt (ex. for im0) with the following info:
+		// what point in order is this point, in this image - one number, alone on line
+		// info about retrieved bins: bin_num, point_num, im_num - bin_nums on one line, point_nums on next line, im_nums on third line etc.
+		// ex. 5 - point that is voting
+		// 3 9 8 9 7 - numbers of the retrieved bins
+		// 980 456 342 980 459 - point numbers in the below image
+		// 45 9 32 239 9987 - image numbers
+		//double[] reciprocals = new double[IndexingGroundTruthTest2.NUM_RUNS * 3];
 		int index = 0;
-		int queryImage = 3;
+		int queryImage = 0;
 		
 		// To get average number of votes for the 3 matching images and the average for the 
 		// remaining (NUM_IMAGES - 4) images
-		double im1VotesSum = 0, im2VotesSum = 0, im3VotesSum = 0;
-		double imRestSum = 0;
+		//double im1VotesSum = 0, im2VotesSum = 0, im3VotesSum = 0;
+		//double imRestSum = 0;
 		
 		// stats is array of double of length 13 - it contains 4 averages for varianceWide, 4 averages for 
 		// varianceNarrow and 4 averages for varianceNarrow where values are normalized by densityEstimate
 		// and the last value is the number of points from this image that voted
 		// This information gathered in vote-for-point function
-		double[] stats = {0.0, 0.0, 0.0, 0.0,	// average for bins 1-4 for varianceWide
+		/*double[] stats = {0.0, 0.0, 0.0, 0.0,	// average for bins 1-4 for varianceWide
 						  0.0, 0.0, 0.0, 0.0,	// average for bins 1-4 for varianceNarrow
 						  0.0, 0.0, 0.0, 0.0,	// average for bins 1-4 for varianceNarrow normalized
-						  0.0 };			// number of points that voted
+						  0.0 };	*/		// number of points that voted
 		
 		for(int j = 0; j < NUM_RUNS; j++)
 		{					
@@ -321,19 +330,19 @@ private static final int NUM_RUNS = 2550;
 			// get the path names from the Paths class
 			//String imageFileName = Path.imageSinglObj + "ukbench" + formatter.format(queryImage) + ".obj";
 			
-			String imageFileName = Path.fileSinglOBJ_4 + "ukbench" + formatter.format(queryImage) + ".obj";
+			String imageFileName = Path.fileSinglOBJ_2 + "ukbench" + formatter.format(queryImage) + ".obj";
 			//String imageFileName = Path.fileSinglOBJ_3 + "ukbench" + formatter.format(queryImage) + ".obj";
 			
-			double[] votes = kdTreeInstance.voteForImageWithWeightsAndDensityWithStats(trainedTree, 
-					populatedTree, counts, imageFileName, IndexingGroundTruthTest2.NUM_IMAGES_POPULATING, stats); 									
+			double[] votes = kdTreeInstance.voteForImage(trainedTree, 
+					populatedTree, counts, imageFileName, IndexingGroundTruthTest2.NUM_IMAGES_POPULATING); 									
 			
 //			System.out.println("\nImage " + queryImage + " has " + votes[queryImage] + " votes.");
 //			System.out.println("In votes array, queryImage is located at position " + queryImage + " and has " + votes[queryImage] + " votes.");
 				
 			// we put all the image-votes pairs in a list and sort it
-			LinkedList<ImageScorePair> scoresList = new LinkedList<ImageScorePair>();
+			//LinkedList<ImageScorePair> scoresList = new LinkedList<ImageScorePair>();
 			
-			ImageScorePair pair1 = null, pair2 = null, pair3 = null, queryPair = null;			
+		/*	ImageScorePair pair1 = null, pair2 = null, pair3 = null, queryPair = null;			
 			for(int i = 0; i < votes.length; i++)
 			{
 				if(i != queryImage) // we take the query image out of the set
@@ -368,10 +377,10 @@ private static final int NUM_RUNS = 2550;
 					scoresList.add(pair);
 					queryPair = pair;
 				}		
-			}
+			}*/
 			
 			// create instance of Scores class with above created scoresList
-			Scores scores = new Scores(scoresList);
+			//Scores scores = new Scores(scoresList);
 			
 			// sort scores - create instance of Scores class with the same scoresList, but sorted
 			//Scores scoresSorted = scores.sortScores(scores);
@@ -379,10 +388,10 @@ private static final int NUM_RUNS = 2550;
 			//LinkedList<ImageScorePair> scoresListSorted = scoresSorted.getScoresList();
 			
 			// sort the scoresList
-			scores.sortDescending();
+			//scores.sortDescending();
 			
 			// get the sorted scoreList
-			LinkedList<ImageScorePair> scoresListSorted = scores.getScoreList();
+			//LinkedList<ImageScorePair> scoresListSorted = scores.getScoreList();
 			
 			// get and print the rank of queryPair - should be first
 			//int queryPairRank = scoresListSorted.indexOf(queryPair);
@@ -397,7 +406,7 @@ private static final int NUM_RUNS = 2550;
 			//		queryImageScore + " = " + (dataSet.length / Keypoint.DESCRIPTOR_LENGTH));
 						
 			// now take the query image out of the scoresList so that it doesn't influence the results
-			scoresListSorted.remove(queryPair);
+			//scoresListSorted.remove(queryPair);
 			
 /////////////////////////////////			
 			
@@ -405,104 +414,104 @@ private static final int NUM_RUNS = 2550;
 			// and add them to the reciprocal set
 			// For now, for simplicity we always query with the 4th of the 4 images in a block				
 			
-			int pair1Rank = scoresListSorted.indexOf(pair1) + 1;  // we don't need rank 0 bcuz that'd give us 1/0
-			int pair2Rank = scoresListSorted.indexOf(pair2) + 1;
-			int pair3Rank = scoresListSorted.indexOf(pair3) + 1;
+			//int pair1Rank = scoresListSorted.indexOf(pair1) + 1;  // we don't need rank 0 bcuz that'd give us 1/0
+			//int pair2Rank = scoresListSorted.indexOf(pair2) + 1;
+			//int pair3Rank = scoresListSorted.indexOf(pair3) + 1;
 			
 			// Sort the ranks
-			int[] ranks = new int[3];
-			ranks[0] = pair1Rank;	// rank of first image in the set of 4
-			ranks[1] = pair2Rank;	// rank of second image in the set of 4
-			ranks[2] = pair3Rank;	// rank of third image in the set of 4
+			//int[] ranks = new int[3];
+			//ranks[0] = pair1Rank;	// rank of first image in the set of 4
+			//ranks[1] = pair2Rank;	// rank of second image in the set of 4
+			//ranks[2] = pair3Rank;	// rank of third image in the set of 4
 									// fourth image in the set of 4 is the query image
-			Arrays.sort(ranks);
-			int bestRank = ranks[0];	// best rank of the three
-			int midRank = ranks[1];		// mid rank of the three
-			int worstRank = ranks[2];	// worst rank of the three
-			
-			double precision1 = 1.0/bestRank;
-			double precision2 = 2.0/midRank;
-			double precision3 = 3.0/worstRank;
+			//Arrays.sort(ranks);
+			//int bestRank = ranks[0];	// best rank of the three
+//			int midRank = ranks[1];		// mid rank of the three
+//			int worstRank = ranks[2];	// worst rank of the three
+//			
+//			double precision1 = 1.0/bestRank;
+//			double precision2 = 2.0/midRank;
+//			double precision3 = 3.0/worstRank;
 						
 			//System.out.println("Best rank = " + bestRank + ",\tmidle rank = " + midRank + ",\tworstRank3 = " + worstRank);			
 			
 			// index i - best scored image of 3 (4-query) images
 			// index i+1 - mid scored image of 3 (4-query) images
 			// index i+2 - worst scored image of 3 (4-query) images
-			reciprocals[index] = precision1;
-			index++;
-			reciprocals[index] = precision2;
-			index++;
-			reciprocals[index] = precision3;
-			index++;
-			
-			// take the next query image
-			queryImage = queryImage + 4;
+//			reciprocals[index] = precision1;
+//			index++;
+//			reciprocals[index] = precision2;
+//			index++;
+//			reciprocals[index] = precision3;
+//			index++;
+//			
+//			// take the next query image
+//			queryImage = queryImage + 4;
 		}
 		
 		// Print out the statistics for varianceWide
-		System.out.println("############################################################");
-		System.out.println("Statistics on average weight for bins 1-4, for varianceWide");
-		System.out.println("Bin 1:\t average = " + stats[0] / stats[12]);
-		System.out.println("Bin 2:\t average = " + stats[1] / stats[12]);
-		System.out.println("Bin 3:\t average = " + stats[2] / stats[12]);
-		System.out.println("Bin 200:\t average = " + stats[3] / stats[12]);
-		System.out.println("############################################################");
-		System.out.println("Statistics on average weight for bins 1-4, for varianceNarrow");
-		System.out.println("Bin 1:\t average = " + stats[4] / stats[12]);
-		System.out.println("Bin 2:\t average = " + stats[5] / stats[12]);
-		System.out.println("Bin 3:\t average = " + stats[6] / stats[12]);
-		System.out.println("Bin 200:\t average = " + stats[7] / stats[12]);
-		System.out.println("############################################################");
-		System.out.println("Statistics on average weight for bins 1-4, for varianceNarrow with normalization");
-		System.out.println("Bin 1:\t average = " + stats[8] / stats[12]);
-		System.out.println("Bin 2:\t average = " + stats[9] / stats[12]);
-		System.out.println("Bin 3:\t average = " + stats[10] / stats[12]);
-		System.out.println("Bin 200:\t average = " + stats[11] / stats[12]);
-		System.out.println("############################################################");
+//		System.out.println("############################################################");
+//		System.out.println("Statistics on average weight for bins 1-4, for varianceWide");
+//		System.out.println("Bin 1:\t average = " + stats[0] / stats[12]);
+//		System.out.println("Bin 2:\t average = " + stats[1] / stats[12]);
+//		System.out.println("Bin 3:\t average = " + stats[2] / stats[12]);
+//		System.out.println("Bin 200:\t average = " + stats[3] / stats[12]);
+//		System.out.println("############################################################");
+//		System.out.println("Statistics on average weight for bins 1-4, for varianceNarrow");
+//		System.out.println("Bin 1:\t average = " + stats[4] / stats[12]);
+//		System.out.println("Bin 2:\t average = " + stats[5] / stats[12]);
+//		System.out.println("Bin 3:\t average = " + stats[6] / stats[12]);
+//		System.out.println("Bin 200:\t average = " + stats[7] / stats[12]);
+//		System.out.println("############################################################");
+//		System.out.println("Statistics on average weight for bins 1-4, for varianceNarrow with normalization");
+//		System.out.println("Bin 1:\t average = " + stats[8] / stats[12]);
+//		System.out.println("Bin 2:\t average = " + stats[9] / stats[12]);
+//		System.out.println("Bin 3:\t average = " + stats[10] / stats[12]);
+//		System.out.println("Bin 200:\t average = " + stats[11] / stats[12]);
+//		System.out.println("############################################################");
 		
 		//System.out.println("Last image used is image " + (queryImage - 4));
 		
 		// Average number of votes for matching images 1, 2 and 3 (not sorted)
-		double im1AvrgVotes = im1VotesSum / IndexingGroundTruthTest2.NUM_RUNS;
-		double im2AvrgVotes = im2VotesSum / IndexingGroundTruthTest2.NUM_RUNS;
-		double im3AvrgVotes = im3VotesSum / IndexingGroundTruthTest2.NUM_RUNS;
-		System.out.println("\nAverage number of votes for matching images - not sorted by number of votes:");
-		System.out.println("\nAvrg votes im1 = " + im1AvrgVotes + ", avrg votes im2 = " + im2AvrgVotes + ", avrg votes im3 = " + im3AvrgVotes);
+//		double im1AvrgVotes = im1VotesSum / IndexingGroundTruthTest2.NUM_RUNS;
+//		double im2AvrgVotes = im2VotesSum / IndexingGroundTruthTest2.NUM_RUNS;
+//		double im3AvrgVotes = im3VotesSum / IndexingGroundTruthTest2.NUM_RUNS;
+//		System.out.println("\nAverage number of votes for matching images - not sorted by number of votes:");
+//		System.out.println("\nAvrg votes im1 = " + im1AvrgVotes + ", avrg votes im2 = " + im2AvrgVotes + ", avrg votes im3 = " + im3AvrgVotes);
 		
 		// Average for all 3 matching images
-		double imMatchAvrgVotes = (im1AvrgVotes + im2AvrgVotes + im3AvrgVotes) / 3;
-		System.out.println("Average votes for all 3 matching imgs (im1,im2,im3) = " + imMatchAvrgVotes);
+//		double imMatchAvrgVotes = (im1AvrgVotes + im2AvrgVotes + im3AvrgVotes) / 3;
+//		System.out.println("Average votes for all 3 matching imgs (im1,im2,im3) = " + imMatchAvrgVotes);
 		
 		// Average number of votes for all other non matching images
-		double imRestAvrgVotes = imRestSum / (IndexingGroundTruthTest2.NUM_RUNS * (KeypointsExtraction.NUM_IMAGES-4));
-		System.out.println("Average votes for all non-matching imgs (all except im1,im2,im3,im4) = " + imRestAvrgVotes);
+//		double imRestAvrgVotes = imRestSum / (IndexingGroundTruthTest2.NUM_RUNS * (KeypointsExtraction.NUM_IMAGES-4));
+//		System.out.println("Average votes for all non-matching imgs (all except im1,im2,im3,im4) = " + imRestAvrgVotes);
 		
 		// sum1 - sum of reciprocals for best scored images
 		// sum2 - sum of reciprocals for mid scored images
 		// sum3 - sum of reciprocals for worst scored images
-		double sum1 = 0, sum2 = 0, sum3 = 0;
-		
-		for(int i = 0; i < reciprocals.length; i = i + 3)
-		{
-			sum1 = sum1 + reciprocals[i];
-			sum2 = sum2 + reciprocals[i+1];
-			sum3 = sum3 + reciprocals[i+2];
-		}		
-		
-		double avrg1 = sum1 / IndexingGroundTruthTest2.NUM_RUNS;
-		double avrg2 = sum2 / IndexingGroundTruthTest2.NUM_RUNS;
-		double avrg3 = sum3 / IndexingGroundTruthTest2.NUM_RUNS;
-		
-		System.out.println("\nAverage prec for the best scored image: " + avrg1 + "\nAverage prec for the mid scored image: " + avrg2 + 
-				"\nAverage prec for the worst scored image: " + avrg3);
-		
-		double avrg = (avrg1 + avrg2 + avrg3) / 3;
-		
-		System.out.println("\n\nOverall average precision is " + avrg + "\n");		
-		
-		long endTime = System.currentTimeMillis();
-		System.out.println("\nTime needed to index with all images: " + (((endTime - beginTime)/1000)/60) + "min");
+//		double sum1 = 0, sum2 = 0, sum3 = 0;
+//		
+//		for(int i = 0; i < reciprocals.length; i = i + 3)
+//		{
+//			sum1 = sum1 + reciprocals[i];
+//			sum2 = sum2 + reciprocals[i+1];
+//			sum3 = sum3 + reciprocals[i+2];
+//		}		
+//		
+//		double avrg1 = sum1 / IndexingGroundTruthTest2.NUM_RUNS;
+//		double avrg2 = sum2 / IndexingGroundTruthTest2.NUM_RUNS;
+//		double avrg3 = sum3 / IndexingGroundTruthTest2.NUM_RUNS;
+//		
+//		System.out.println("\nAverage prec for the best scored image: " + avrg1 + "\nAverage prec for the mid scored image: " + avrg2 + 
+//				"\nAverage prec for the worst scored image: " + avrg3);
+//		
+//		double avrg = (avrg1 + avrg2 + avrg3) / 3;
+//		
+//		System.out.println("\n\nOverall average precision is " + avrg + "\n");		
+//		
+//		long endTime = System.currentTimeMillis();
+//		System.out.println("\nTime needed to index with all images: " + (((endTime - beginTime)/1000)/60) + "min");
 		
 	}	
 }

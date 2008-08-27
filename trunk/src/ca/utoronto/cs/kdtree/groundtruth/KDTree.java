@@ -720,6 +720,120 @@ public class KDTree
 	/*
 	 * This method does the voting given the populated tree, the trained tree, the query
 	 * point and the number of images.
+	 * It does not care if one point votes for multiple points in an image
+	 * It returns the vector with that number of elements equal to the number of images where
+	 * element at index i represents the image with imageID = i.
+	 * It also opens the file with name outputFileName and adds to it the info about retrieved bins, imgs, pt indeces
+	 */	
+	public void voteForPointWithGroundTruth(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
+			Keypoint queryPoint, int queryPtID, Vector<CountIndexPair> counts, double[] votes, String outputFileName)
+	{				
+		// threshold for max distance between this query pt and points that we consider close enough
+		double threshold = 100000000000000000000000000.0;
+		// threshold on number of bins we want to look into to find reasonably close points to this query point
+		int maxBins = IndexingGroundTruthTest2.NUM_LEAFS_IN_TRAINED_TREE; // we don't want to limit the number of bins
+		
+		// get all the bins tha contain points 'reasonably' close to the query point		
+		Vector<Integer> binIDs = this.bestBinFirst(trainedTree, new double[maxBins], queryPoint, threshold, maxBins);
+		
+		// Calculate how many points in total (accross all bins) did we retrieve
+		int totalPts = 0;
+		for(int i = 0; i < binIDs.size(); i++) 
+		{
+			int binID = binIDs.get(i);
+			int count = counts.get(binID).getCount();
+			totalPts = totalPts + count;			
+		}
+		
+		// For ground truth
+		int[] bins = new int[totalPts];
+		int[] points = new int[totalPts];
+		int[] images = new int[totalPts];
+		int gtPos = 0;
+		
+		// iterate over all returned bins (the bins with 'close' points)				
+		for(int i = 0; i < binIDs.size(); i++)
+		{
+			// for each bin, iterate over its points and vote for 
+			// the images where those points belong to
+			// also for each point in each bin save bin number, point index within its image and its image - these
+			// things will be saved in three arrays: bins, points, images - all of same length
+			// when all bins visited, write this info to a file along witht he queryPoint number
+			
+			// get a bin
+			int binID = binIDs.get(i);
+			// get its count and index of its first element
+			int count = counts.get(binID).getCount();
+			int firstElIndex = counts.get(binID).getIndex();
+			
+			// go into the populated tree, go to the point at index firstElIndex and 
+			// iterate over next count points										
+			for(int j = firstElIndex; j < firstElIndex + count; j++)
+			{
+				// get the imageID of the retrieved point				
+				int imageID = (populatedTree.getImageIDs())[j];
+				
+				// vote for the image imageID				
+				//if(lastQueryPtVoted[imageID] != queryPtID)
+				//{
+					votes[imageID]++;
+				//	lastQueryPtVoted[imageID] = queryPtID;					
+				//}		
+					
+				// save the info for ground truth file
+				bins[gtPos] = populatedTree.getBinIDs()[j];
+				points[gtPos] = populatedTree.getPointIDs()[j];
+				images[gtPos] = populatedTree.getImageIDs()[j];
+				gtPos++;
+			}			
+		}
+		
+		if(gtPos != totalPts) 
+		{
+			try {
+				throw new Exception("Thrown in KDTree class. Something is wrong with ground trugh info.");
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
+		// If everything is fine, open the the file names putputFileName and write this info to it
+		String binsString = "";
+		for(int i = 0; i < bins.length; i++)
+		{
+			binsString = binsString + " " + bins[i];
+		}
+		String pointsString = "";
+		for(int i = 0; i < points.length; i++)
+		{
+			pointsString = pointsString + " " + points[i];
+		}
+		String imagesString = "";
+		for(int i = 0; i < images.length; i++)
+		{
+			imagesString = imagesString + " " + images[i];
+		}
+		
+		try {
+	        BufferedWriter out = new BufferedWriter(new FileWriter("outputFileName"));
+	        out.write(queryPtID);
+	        out.write("\n");
+	        out.write(binsString);
+	        out.write("\n");
+	        out.write(pointsString);
+	        out.write("\n");
+	        out.write(imagesString);
+	        out.write("\n");
+	        
+	        out.close();
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    }
+	}
+	
+	/*
+	 * This method does the voting given the populated tree, the trained tree, the query
+	 * point and the number of images.
 	 * It does not care if one point votes for multiple points in an image and it weights the votes
 	 * according to the distance of the query point to the retrieved bins (where retrieved points belong).
 	 * It returns the vector with that number of elements equal to the number of images where
@@ -1171,6 +1285,84 @@ public class KDTree
 			{
 				Keypoint queryPoint = keyptArr[queryPtID];
 				this.voteForPoint(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes);
+			}
+			in.close();
+			
+		}catch (IOException ioe)
+		{
+		ioe.printStackTrace();
+		}
+		catch (ClassNotFoundException cnfe)
+		{ 
+			cnfe.printStackTrace();
+		}		
+		return votes;
+	}
+	
+
+	/*
+	 * This method does the voting given the populated tree, the trained tree, the image
+	 * and the number of images in total.
+	 * It lets each query point votes for all polled points in an image
+	 * It returns the vector with that number of elements equal to the number of images where
+	 * element at index i represents the image with imageID = i.
+	 * This method is used to produce some info for ground truth - it calls voteForPointWithGroundTruth
+	 * method that for each point writes some info to a file (one file per image).
+	 */	
+	public double[] voteForImageWithGroundTruth(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
+			Vector<CountIndexPair> counts, String imageFileName, int numOfImages)
+	{
+		double[] votes = new double[numOfImages];
+		
+		// indeces corespond to imageIDs - this array tells us what is the last query point
+		// that voted for this image
+		// we don't want to allow one query point to vote for many points in an image so that one image 
+		// doesn't get too many votes due to many polled points in that image (this would happen if the
+		// image contains a pattern for example)
+		// we initialize all elements of lastQueryPtVoted to -1
+		//int[] lastQueryPtVoted = new int[numOfImages];
+		//for(int i = 0; i < lastQueryPtVoted.length; i++)
+		//{
+		//	lastQueryPtVoted[i] = -1;
+		//}
+		
+		// read the image that we are voting for
+		File objFile = new File(imageFileName);		
+		try
+		{						
+			ObjectInputStream in = new ObjectInputStream(new
+					BufferedInputStream(new FileInputStream(objFile)));
+			
+			ImageKeypoints imageKeypts;
+			ImageKeypointPairs imageKeyptPairs;
+			Keypoint[] keyptArr;			
+			
+			String imageNum;
+			
+			// get the all the keypoints or all the keypoint pairs 
+			// (depending on if it is .obj or .pair.obj file) from this image
+			if(imageFileName.endsWith(".pair.obj"))
+			{				
+				imageKeyptPairs = (ImageKeypointPairs)in.readObject();
+				keyptArr = imageKeyptPairs.getKeyptPairArray();
+				imageNum = imageFileName.substring(imageFileName.length() - 1 - 8 - 5, 
+						imageFileName.length() - 1 - 8);
+			}else
+			{				
+				imageKeypts = (ImageKeypoints)in.readObject();
+				keyptArr = imageKeypts.getKeyptArray();
+				imageNum = imageFileName.substring(imageFileName.length() - 1 - 3 - 5, 
+						imageFileName.length() - 1 - 3);
+			}							
+			
+			// Info about voting (bins, images, point indeces) for ground truth
+			String outputFileName = "votingInfoIm" + Integer.parseInt(imageNum);
+			
+			// vote for each keypoint in this image and write some ground truth info to outputFile
+			for(int queryPtID = 0; queryPtID < keyptArr.length; queryPtID++)
+			{
+				Keypoint queryPoint = keyptArr[queryPtID];
+				this.voteForPointWithGroundTruth(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes, outputFileName);
 			}
 			in.close();
 			
