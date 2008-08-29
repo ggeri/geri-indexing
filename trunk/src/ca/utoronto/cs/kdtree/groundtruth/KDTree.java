@@ -726,7 +726,7 @@ public class KDTree
 	 * It also opens the file with name outputFileName and adds to it the info about retrieved bins, imgs, pt indeces
 	 */	
 	public void voteForPointWithGroundTruth(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
-			Keypoint queryPoint, int queryPtID, Vector<CountIndexPair> counts, double[] votes, String outputFileName)
+			Keypoint queryPoint, int queryPtID, Vector<CountIndexPair> counts, double[] votes, BufferedWriter writer)
 	{				
 		// threshold for max distance between this query pt and points that we consider close enough
 		double threshold = 100000000000000000000000000.0;
@@ -797,38 +797,35 @@ public class KDTree
 			}
 		}
 		
-		// If everything is fine, open the the file names putputFileName and write this info to it
 		String binsString = "";
-		for(int i = 0; i < bins.length; i++)
-		{
-			binsString = binsString + " " + bins[i];
-		}
 		String pointsString = "";
-		for(int i = 0; i < points.length; i++)
-		{
-			pointsString = pointsString + " " + points[i];
-		}
 		String imagesString = "";
-		for(int i = 0; i < images.length; i++)
+		for(int i = 0; i < bins.length; i++) 
 		{
-			imagesString = imagesString + " " + images[i];
+			binsString = binsString + " ";
+		}
+		for(int i = 0; i < bins.length; i++) 
+		{
+			pointsString = pointsString + " ";
+		}
+		for(int i = 0; i < bins.length; i++) 
+		{
+			imagesString = imagesString + " ";
 		}
 		
 		try {
-	        BufferedWriter out = new BufferedWriter(new FileWriter("outputFileName"));
-	        out.write(queryPtID);
-	        out.write("\n");
-	        out.write(binsString);
-	        out.write("\n");
-	        out.write(pointsString);
-	        out.write("\n");
-	        out.write(imagesString);
-	        out.write("\n");
-	        
-	        out.close();
-	    } catch (IOException e) {
-	    	e.printStackTrace();
-	    }
+			writer.write(queryPtID);
+			writer.write("\n");
+			writer.write(binsString);
+			writer.write("\n");
+			writer.write(pointsString);
+			writer.write("\n");
+			writer.write(imagesString);
+			writer.write("\n");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	       
 	}
 	
 	/*
@@ -1358,12 +1355,20 @@ public class KDTree
 			// Info about voting (bins, images, point indeces) for ground truth
 			String outputFileName = "votingInfoIm" + Integer.parseInt(imageNum);
 			
+			// Open the the file named outputFileName and and pass BufferWrite instance when voting for each point			
+			BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName));
+			
+			
 			// vote for each keypoint in this image and write some ground truth info to outputFile
 			for(int queryPtID = 0; queryPtID < keyptArr.length; queryPtID++)
 			{
 				Keypoint queryPoint = keyptArr[queryPtID];
-				this.voteForPointWithGroundTruth(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes, outputFileName);
+				this.voteForPointWithGroundTruth(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes, writer);
 			}
+			
+			// done voting and writing - close the writer
+			writer.close();
+			
 			in.close();
 			
 		}catch (IOException ioe)
