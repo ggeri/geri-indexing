@@ -808,4 +808,27 @@ public class ImageKeypointPairs implements Serializable
 		return this.keyptPairArray;
 	}
 	
+	/**
+	 * This method takes all the points of this image and normalizes their
+	 * feature vectors.
+	 */
+	
+	public void normalizeKeypointPairs() 
+	{
+		for(int i = 0; i < keyptPairArray.length; i++ )
+		{
+			KeypointPair keyptPair = keyptPairArray[i];
+			short[] desc = keyptPair.getDescriptor();
+			int magn = 0;
+			for(int j = 0; j < desc.length; j++)
+			{
+				magn = magn + desc[j];
+			}
+			for(int j = 0; j < desc.length; j++)
+			{
+				desc[j] = (short) Math.floor(desc[j] / magn);
+			}
+			keyptPair.setDescriptor(desc);
+		}
+	}
 }
