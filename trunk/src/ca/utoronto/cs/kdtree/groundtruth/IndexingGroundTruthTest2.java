@@ -333,7 +333,7 @@ private static final int NUM_RUNS = 1;
 			String imageFileName = Path.fileSinglOBJ_2 + "ukbench" + formatter.format(queryImage) + ".obj";
 			//String imageFileName = Path.fileSinglOBJ_3 + "ukbench" + formatter.format(queryImage) + ".obj";
 			
-			double[] votes = kdTreeInstance.voteForImage(trainedTree, 
+			double[] votes = kdTreeInstance.voteForImageWithGroundTruth(trainedTree, 
 					populatedTree, counts, imageFileName, IndexingGroundTruthTest2.NUM_IMAGES_POPULATING); 									
 			
 //			System.out.println("\nImage " + queryImage + " has " + votes[queryImage] + " votes.");
