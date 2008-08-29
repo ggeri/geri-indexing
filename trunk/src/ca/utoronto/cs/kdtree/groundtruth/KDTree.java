@@ -681,7 +681,7 @@ public class KDTree
 			Keypoint queryPoint, int queryPtID, Vector<CountIndexPair> counts, double[] votes)
 	{				
 		// threshold for max distance between this query pt and points that we consider close enough
-		double threshold = 100000000000000000000000000.0;
+		double threshold = 0.7396;
 		// threshold on number of bins we want to look into to find reasonably close points to this query point
 		int maxBins = 25;
 		
@@ -1270,13 +1270,10 @@ public class KDTree
 			if(imageFileName.endsWith(".pair.obj"))
 			{				
 				imageKeyptPairs = (ImageKeypointPairs)in.readObject();
-				imageKeyptPairs.normalizeKeypointPairs();
 				keyptArr = imageKeyptPairs.getKeyptPairArray();
 			}else
 			{				
 				imageKeypts = (ImageKeypoints)in.readObject();
-				// normalize feature vectors
-				imageKeypts.normalizeKeypoints();
 				keyptArr = imageKeypts.getKeyptArray();
 			}							
 			
@@ -1344,12 +1341,14 @@ public class KDTree
 			if(imageFileName.endsWith(".pair.obj"))
 			{				
 				imageKeyptPairs = (ImageKeypointPairs)in.readObject();
+				imageKeyptPairs.normalizeKeypointPairs();
 				keyptArr = imageKeyptPairs.getKeyptPairArray();
 				imageNum = imageFileName.substring(imageFileName.length() - 1 - 8 - 5, 
 						imageFileName.length() - 1 - 8);
 			}else
 			{				
 				imageKeypts = (ImageKeypoints)in.readObject();
+				imageKeypts.normalizeKeypoints();
 				keyptArr = imageKeypts.getKeyptArray();
 				imageNum = imageFileName.substring(imageFileName.length() - 1 - 3 - 5, 
 						imageFileName.length() - 1 - 3);
