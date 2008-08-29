@@ -802,15 +802,15 @@ public class KDTree
 		String imagesString = "";
 		for(int i = 0; i < bins.length; i++) 
 		{
-			binsString = binsString + " ";
+			binsString = binsString + bins[i] + " ";
 		}
 		for(int i = 0; i < bins.length; i++) 
 		{
-			pointsString = pointsString + " ";
+			pointsString = pointsString + points[i] + " ";
 		}
 		for(int i = 0; i < bins.length; i++) 
 		{
-			imagesString = imagesString + " ";
+			imagesString = imagesString + images[i] + " ";
 		}
 		
 		try {
@@ -1270,10 +1270,13 @@ public class KDTree
 			if(imageFileName.endsWith(".pair.obj"))
 			{				
 				imageKeyptPairs = (ImageKeypointPairs)in.readObject();
+				imageKeyptPairs.normalizeKeypointPairs();
 				keyptArr = imageKeyptPairs.getKeyptPairArray();
 			}else
 			{				
 				imageKeypts = (ImageKeypoints)in.readObject();
+				// normalize feature vectors
+				imageKeypts.normalizeKeypoints();
 				keyptArr = imageKeypts.getKeyptArray();
 			}							
 			
