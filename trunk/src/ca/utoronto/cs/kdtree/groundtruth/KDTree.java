@@ -729,7 +729,7 @@ public class KDTree
 			Keypoint queryPoint, int queryPtID, Vector<CountIndexPair> counts, double[] votes, BufferedWriter writer)
 	{				
 		// threshold for max distance between this query pt and points that we consider close enough
-		double threshold = 100000000000000000000000000.0;
+		double threshold = 0.7396;
 		// threshold on number of bins we want to look into to find reasonably close points to this query point
 		int maxBins = IndexingGroundTruthTest2.NUM_LEAFS_IN_TRAINED_TREE; // we don't want to limit the number of bins
 		
@@ -791,7 +791,7 @@ public class KDTree
 		if(gtPos != totalPts) 
 		{
 			try {
-				throw new Exception("Thrown in KDTree class. Something is wrong with ground trugh info.");
+				throw new Exception("Thrown in KDTree class. Something is wrong with ground truth info.");
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
@@ -804,17 +804,21 @@ public class KDTree
 		{
 			binsString = binsString + bins[i] + " ";
 		}
-		for(int i = 0; i < bins.length; i++) 
+		for(int i = 0; i < points.length; i++) 
 		{
 			pointsString = pointsString + points[i] + " ";
 		}
-		for(int i = 0; i < bins.length; i++) 
+		for(int i = 0; i < images.length; i++) 
 		{
 			imagesString = imagesString + images[i] + " ";
 		}
 		
 		try {
-			writer.write(queryPtID);
+			writer.write(queryPtID); // query point that is used for this query
+			writer.write("\n");
+			writer.write(binIDs.size()); // how many bins are retrieved by this query
+			writer.write("\n");
+			writer.write(points.length); // how many points are retrieved by this query
 			writer.write("\n");
 			writer.write(binsString);
 			writer.write("\n");

@@ -116,7 +116,8 @@ private static final int NUM_RUNS = 1;
 	
 				// write the trained tree to the disk under the name trainedTreeSingl.obj
 				//String trainedTreeName = "trainedTreeSinglFullDim.obj";
-				String trainedTreeName = "trainedTreeSingl.obj";
+				//String trainedTreeName = "trainedTreeSingl.obj";
+				String trainedTreeName = "trainedTreeSinglNormalized.obj";
 				File trainedTreeFile = new File(trainedTreeName);
 
 				ObjectOutputStream out = new ObjectOutputStream(new
@@ -136,7 +137,8 @@ private static final int NUM_RUNS = 1;
 	    	  
 	    	  System.out.println(stars + "\nReading the trained tree from the disk. ");
 	    	  //String trainedTreeName = "trainedTreeSinglFullDim.obj";
-	    	  String trainedTreeName = "trainedTreeSingl.obj";
+	    	 // String trainedTreeName = "trainedTreeSingl.obj";
+	    	  String trainedTreeName = "trainedTreeSinglNormalized.obj";
 			  File trainedTreeFile = new File(trainedTreeName);
 			  try{
 			  ObjectInputStream in = new ObjectInputStream(new
@@ -223,7 +225,8 @@ private static final int NUM_RUNS = 1;
 			{
 				// write the data set for populating to the disk under the name opopulateDataSet.obj
 				//String populateDataSetName = "dataForTreePopulatingSinglFullDim.obj";
-				String populateDataSetName = "dataForTreePopulatingSingl.obj";
+				//String populateDataSetName = "dataForTreePopulatingSingl.obj";
+				String populateDataSetName = "dataForTreePopulatingSinglNormalized.obj";
 				File populateDataSetFile = new File(populateDataSetName);
 				ObjectOutputStream out = new ObjectOutputStream(new
 						BufferedOutputStream(new FileOutputStream(populateDataSetFile)));
@@ -232,7 +235,8 @@ private static final int NUM_RUNS = 1;
 				
 	            // write the imageIndeces to the disk under the name imageIndeces.obj
 				//String imageIndecesName = "imageIndecesSinglFullDim.obj";
-				String imageIndecesName = "imageIndecesSingl.obj";
+				//String imageIndecesName = "imageIndecesSingl.obj";
+				String imageIndecesName = "imageIndecesSinglNormalized.obj";
 				File imageIndecesFile = new File(imageIndecesName);	
 				ObjectOutputStream out2 = new ObjectOutputStream(new
 						BufferedOutputStream(new FileOutputStream(imageIndecesFile)));
@@ -249,8 +253,10 @@ private static final int NUM_RUNS = 1;
 			System.out.println(stars + "\nReading the data set for populating the tree from the disk. ");
 	    	  //String populateDataSetName = "dataForTreePopulatingSinglFullDim.obj";				  
 			  //String imageIndecesName = "imageIndecesSinglFullDim.obj";	
-			  String populateDataSetName = "dataForTreePopulatingSingl.obj";
-			  String imageIndecesName = "imageIndecesSingl.obj";
+			  //String populateDataSetName = "dataForTreePopulatingSingl.obj";
+			  //String imageIndecesName = "imageIndecesSingl.obj";
+			  String populateDataSetName = "dataForTreePopulatingSinglNormalized.obj";
+			  String imageIndecesName = "imageIndecesSinglNormalized.obj";
 			  
 			  try{
 				  ObjectInputStream in = new ObjectInputStream(new
