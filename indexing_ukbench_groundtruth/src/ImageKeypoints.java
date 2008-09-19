@@ -226,17 +226,7 @@ public class ImageKeypoints implements Serializable
 				magn = magn + desc[j]*desc[j]; // sum of the squres
 			}
 			// square root of sum of squares
-			magn = Math.sqrt(magn);
-			if(magn == 0)
-			{
-				System.out.println("magn: " + magn);
-				System.out.print("desc: ");
-				for(int j = 0; j < desc.length; j++)
-				{
-					System.out.print(desc[j] + " ");
-				}			
-				System.out.println();
-			}			
+			magn = Math.sqrt(magn);	
 			
 			for(int j = 0; j < desc.length; j++)
 			{
