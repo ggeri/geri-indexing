@@ -309,7 +309,7 @@ private static final int NUM_RUNS = 2550;
 			// get the path names from the Paths class
 			//String imageFileName = Path.imageSinglObj + "ukbench" + formatter.format(queryImage) + ".obj";
 			
-			String imageFileName = Path.fileSinglOBJ_4 + "ukbench" + formatter.format(queryImage) + ".obj";
+			String imageFileName = Path.fileSinglOBJ_2 + "ukbench" + formatter.format(queryImage) + ".obj";
 			//String imageFileName = Path.fileSinglOBJ_3 + "ukbench" + formatter.format(queryImage) + ".obj";
 			
 			double[] votes = kdTreeInstance.voteForImageWithWeightsAndDensityWithStats(trainedTree, 
