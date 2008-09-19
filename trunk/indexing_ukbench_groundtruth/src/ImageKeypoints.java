@@ -229,8 +229,9 @@ public class ImageKeypoints implements Serializable
 			System.out.print("desc: ");
 			for(int j = 0; j < desc.length; j++)
 			{
-				System.out.println(desc[j] + " ");
+				System.out.print(desc[j] + " ");
 			}			
+			System.out.println();
 			
 			for(int j = 0; j < desc.length; j++)
 			{
