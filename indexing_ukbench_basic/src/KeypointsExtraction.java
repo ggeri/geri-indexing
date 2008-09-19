@@ -271,7 +271,6 @@ public class KeypointsExtraction
 			
 			ImageKeypoints imageKeypts = (ImageKeypoints)in.readObject();	
 			
-			System.out.println("normalized");
 			imageKeypts.normalizeKeypoints(); // remove!!!
 							
 			KeypointSingleton[] keyptArr = imageKeypts.getKeyptArray();			
