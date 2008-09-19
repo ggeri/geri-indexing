@@ -1095,6 +1095,7 @@ public class KDTree
 			}else
 			{				
 				imageKeypts = (ImageKeypoints)in.readObject();
+				System.out.println("normalized");
 				imageKeypts.normalizeKeypoints(); // remove!!!
 				keyptArr = imageKeypts.getKeyptArray();
 			}							
