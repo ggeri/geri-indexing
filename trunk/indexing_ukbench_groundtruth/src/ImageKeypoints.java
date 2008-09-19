@@ -220,11 +220,13 @@ public class ImageKeypoints implements Serializable
 		{
 			KeypointSingleton keypt = keyptArray[i];
 			short[] desc = keypt.getDescriptor();
-			int magn = 0;
+			double magn = 0;
 			for(int j = 0; j < desc.length; j++)
 			{
-				magn = magn + desc[j];
+				magn = magn + desc[j]*desc[j]; // sum of the squres
 			}
+			// square root of sum of squares
+			magn = Math.sqrt(magn);
 			if(magn == 0)
 			{
 				System.out.println("magn: " + magn);
