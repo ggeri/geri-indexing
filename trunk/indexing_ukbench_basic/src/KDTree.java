@@ -54,10 +54,10 @@ public class KDTree
 			}
 		
 			// find the mean value along this dimension
-			//double splitPt = this.pickSplitPoint(pointsSet, leftInd, rightInd, dim);			
+			double splitPt = this.pickSplitPoint(pointsSet, leftInd, rightInd, dim);			
 
 			// find the sliding midpoint along this dimension
-			double splitPt = this.pickSplitPointSliding(pointsSet, leftInd, rightInd, dim, dimBounds);
+			//double splitPt = this.pickSplitPointSliding(pointsSet, leftInd, rightInd, dim, dimBounds);
 
 			// find the highest value <= splitPt
 			int splitPtInd = this.getSplitPtIndex(pointsSet, leftInd, rightInd, dim, splitPt);
