@@ -207,7 +207,6 @@ public class KDTree
 		if(maxDiff == 0)
 		{
 			System.out.println("maxDiff is : " + maxDiff + " !!!!!!!!!!!!! ");
-			System.exit(0);
 		}
 				
 		return maxDim;
