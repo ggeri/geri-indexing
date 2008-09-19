@@ -3,18 +3,6 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
-//import ca.utoronto.cs.kdtree.basic.CountIndexPair;
-//import ca.utoronto.cs.kdtree.basic.ImageScorePair;
-//import ca.utoronto.cs.kdtree.basic.KDTree;
-//import ca.utoronto.cs.kdtree.basic.Keypoint;
-//import ca.utoronto.cs.kdtree.basic.KeypointSingleton;
-//import ca.utoronto.cs.kdtree.basic.KeypointsExtraction;
-//import ca.utoronto.cs.kdtree.basic.Node;
-//import ca.utoronto.cs.kdtree.basic.Path;
-//import ca.utoronto.cs.kdtree.basic.PopulatedKDTree;
-//import ca.utoronto.cs.kdtree.basic.Scores;
-
-
 public class IndexingGroundTruthTest2 {
 
 /**
