@@ -194,6 +194,8 @@ public class KDTree
 			// get the difference
 			int diff = dimMax - dimMin;
 			
+			System.out.println("dimMax, dimMin and diff: " + dimMax + dimMin + diff);
+			
 			// check against biggest difference so far
 			if (diff > maxDiff)
 			{
