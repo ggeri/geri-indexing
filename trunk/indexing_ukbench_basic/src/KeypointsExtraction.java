@@ -270,8 +270,6 @@ public class KeypointsExtraction
 					BufferedInputStream(new FileInputStream(objFile)));				
 			
 			ImageKeypoints imageKeypts = (ImageKeypoints)in.readObject();	
-			
-			imageKeypts.normalizeKeypoints(); // remove!!!
 							
 			KeypointSingleton[] keyptArr = imageKeypts.getKeyptArray();			
 						
