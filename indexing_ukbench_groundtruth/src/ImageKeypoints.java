@@ -224,18 +224,14 @@ public class ImageKeypoints implements Serializable
 			for(int j = 0; j < desc.length; j++)
 			{
 				magn = magn + desc[j];
-			}			
-			
-			try {
-				for(int j = 0; j < desc.length; j++)
-				{
-					desc[j] = (short) Math.floor(desc[j] / magn);
-				}
-			} catch (Exception e) {
-				System.out.println("magn: " + magn);
-				e.printStackTrace();
 			}
+			System.out.println("magn: " + magn);
+			System.out.println("desc: " + desc.toString());
 			
+			for(int j = 0; j < desc.length; j++)
+			{
+				desc[j] = (short) Math.floor(desc[j] / magn);
+			}
 			keypt.setDescriptor(desc);
 		}
 	}
