@@ -225,6 +225,7 @@ public class ImageKeypoints implements Serializable
 			{
 				magn = magn + desc[j];
 			}
+			System.out.println("magn: " + magn);
 			for(int j = 0; j < desc.length; j++)
 			{
 				desc[j] = (short) Math.floor(desc[j] / magn);
