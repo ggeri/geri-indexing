@@ -209,5 +209,29 @@ public class ImageKeypoints implements Serializable
 	{
 		return this.keyptArray;
 	}
+
+	// remove !!!
+	public void normalizeKeypoints() 
+	{
+		//normalize one by one point
+		for(int i = 0; i < keyptArray.length; i++ )
+		{
+			KeypointSingleton keypt = keyptArray[i];
+			short[] desc = keypt.getDescriptor();
+			double magn = 0;
+			for(int j = 0; j < desc.length; j++)
+			{
+				magn = magn + desc[j]*desc[j]; // sum of the squres
+			}
+			// square root of sum of squares
+			magn = Math.sqrt(magn);	
+			
+			for(int j = 0; j < desc.length; j++)
+			{
+				desc[j] = (short) Math.floor(desc[j] / magn);
+			}
+			keypt.setDescriptor(desc);
+		}
+	}
 	
 }
