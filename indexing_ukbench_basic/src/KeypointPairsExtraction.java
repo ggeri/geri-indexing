@@ -27,7 +27,7 @@ public class KeypointPairsExtraction
 	
 	public KeypointPairsExtraction()
 	{
-		for(int i = 3; i < KeypointPairsExtraction.NUM_IMAGES; i=i+4)
+		for(int i = 0; i < KeypointPairsExtraction.NUM_IMAGES; i++)
 		{	
 			//progress
 			if((i % 100) == 0 || i == 1) 
@@ -39,16 +39,17 @@ public class KeypointPairsExtraction
 		
 			String imageJPG = Path.imageJPG + "ukbench" + formatter.format(i) + ".jpg ";	
 			String imagePGM = Path.imagePGM + "ukbench" + formatter.format(i) + ".pgm";		
-			String fileNameKEY = Path.filePairOBJ_1 + "ukbench" + formatter.format(i) + ".key";			
-			String fileNameOBJ = Path.filePairOBJ_1 + "ukbench" + formatter.format(i) + ".obj";
-			//String fileNamePAIROBJ = KeypointPairsExtraction.imagePath + "ukbench" + formatter.format(i) + ".pair.obj";
+//			String fileNameKEY = Path.filePairOBJ_1 + "ukbench" + formatter.format(i) + ".key";			
+//			String fileNameOBJ = Path.filePairOBJ_1 + "ukbench" + formatter.format(i) + ".obj";
+			String fileNamePAIRKEY = Path.filePairKEY_5 + "ukbench" + formatter.format(i) + ".pair.key";			
+			String fileNamePAIROBJ = Path.filePairOBJ_5 + "ukbench" + formatter.format(i) + ".pair.obj";
 			//String fileNameQueryPAIROBJ = KeypointPairsExtraction.imagePath + "ukbench" + formatter.format(i) + ".q.pair.obj";
 			
 			//String fileNamePAIRPCAKEY = KeypointPairsExtraction.imagePathNoBackupMeaningPair10PcaKey + "ukbench" + formatter.format(i) + ".pair5.pca.key";
 			//String fileNamePAIROBJ = KeypointPairsExtraction.imagePathNoBackupMeaningObj + "ukbench" + formatter.format(i) + ".pair.obj";
 			
-			String fileNamePAIRPCAKEY = Path.filePairMix05KEY_4 + "imagemix" + formatter.format(i) + ".pair.key";
-			String fileNamePAIROBJ = Path.filePairMix05OBJ_4 + "imagemix" + formatter.format(i) + ".pair.obj";
+//			String fileNamePAIRPCAKEY = Path.filePairMix05KEY_4 + "imagemix" + formatter.format(i) + ".pair.key";
+//			String fileNamePAIROBJ = Path.filePairMix05OBJ_4 + "imagemix" + formatter.format(i) + ".pair.obj";
 			
 			// extracts keypoints from the images
 			// this.generateKEYFile(imageJPG, imagePGM, fileNameKEY);		
@@ -64,7 +65,7 @@ public class KeypointPairsExtraction
 			
 			// create the files that represent the sets of keypoint pairs (one file per image)
 			//this.generatePAIROBJFile(fileNameOBJ, fileNamePAIROBJ);
-			this.generatePAIROBJFile(fileNamePAIRPCAKEY, fileNamePAIROBJ);
+			this.generatePAIROBJFile(fileNamePAIRKEY, fileNamePAIROBJ);
 			
 			
 			// remove .key files		
