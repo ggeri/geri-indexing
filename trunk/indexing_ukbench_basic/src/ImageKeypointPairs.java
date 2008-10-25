@@ -354,24 +354,53 @@ public class ImageKeypointPairs implements Serializable
 				// these are the descriptor array values
 				String[] wholeParsedLine = new String[Keypoint.DESCRIPTOR_LENGTH * 2];
 				
-				for (int j = 0; j < 13; j++)
+				for (int j = 0; j < 6; j++) // put back to 13
 				{					
 					line = in.readLine();
 					if(line == null) System.out.println("line is null - point " + i);						
 					
 					parsedLine = line.split("\\s");			
-					int off = j * 20;									
+					int off = j * 12;									
 					for(int m = 0; m < parsedLine.length; m++) 
 					{						
 						int off2 = off + m; 
+//						System.out.println("pair: " + i);
+//						System.out.println("Whole parsed line length: " + wholeParsedLine.length);
+//						System.out.println("Parsed line length: " + parsedLine.length);
+//						System.out.println("j: " + j);
+//						System.out.println("off: " + off);
+//						System.out.println("m: " + m);
+//						System.out.println("off2: " + off2);						
 						wholeParsedLine[off2] = parsedLine[m];	
 					}												
 				}
+				
 				short[] descr = new short[Keypoint.DESCRIPTOR_LENGTH * 2];				
 				for (int k = 0; k < Keypoint.DESCRIPTOR_LENGTH * 2; k++)
 				{										
 					descr[k] = Short.parseShort(wholeParsedLine[k]);
 				}
+				
+				//Print out location and descriptor for first point as a sanity check
+//				if( i == 0)
+//				{
+//					System.out.println("Location 1:");
+//					for(int k = 0; k < 4; k++)
+//					{
+//						System.out.print(locOne[k] + " ");
+//					}
+//					System.out.println("Location 2:");
+//					for(int k = 0; k < 4; k++)
+//					{
+//						System.out.print(locTwo[k] + " ");
+//					}
+//					System.out.println("Descriptor:");
+//					for(int k = 0; k < Keypoint.DESCRIPTOR_LENGTH*2; k++)
+//					{
+//						System.out.print(descr[k] + " ");
+//					}
+//				}				
+				
 				//set the vector in the object				
 				pair.setDescriptor(descr);
 

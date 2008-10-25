@@ -93,4 +93,14 @@ public class Path
 		"/nobackup/geri/projectImages/method_4_fullDimensionality/pair.mix0.5.key/";
 	public static String filePairMix05OBJ_4 = 
 		"/nobackup/geri/projectImages/method_4_fullDimensionality/pair.mix0.5.objFullDim/";
+	
+///////////////////////////////////////////////////////////////////////////
+	// METHOD 5
+	
+	// Singletons	
+	
+	// Pairs
+	public static String filePairKEY_5 = "/nobackup/geri/projectImages/method_5_36dimSingl72dimPairs/pair.key/";
+	public static String filePairOBJ_5 = "/nobackup/geri/projectImages/method_5_36dimSingl72dimPairs/pair.obj72dim/";
+
 }
