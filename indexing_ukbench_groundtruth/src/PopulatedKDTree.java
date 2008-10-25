@@ -1,3 +1,5 @@
+import java.util.Vector;
+
 /**
  * The instance of this class represents the populated KD tree. It consists of three arrays: these are the points
  * ordered by the bins to which they belong. Points are represented as elements of the three arrays: first array 
@@ -59,5 +61,51 @@ public class PopulatedKDTree {
 	public void setImageIDs(int[] imageIDs)
 	{
 		this.imageIDs = pointIDs;
+	}
+	
+	public void setBinID(int position, int binIDValue)
+	{
+		this.binIDs[position] = binIDValue;
+	}
+	
+	public void setPointID(int position, int pointIDValue)
+	{
+		this.pointIDs[position] = pointIDValue;
+	}
+	
+	public void setImageID(int position, int imageIDValue)
+	{
+		this.imageIDs[position] = imageIDValue;
+	}
+	
+	public void sortPointsByBinID(Vector<CountIndexPair> binCounts) 
+	{
+		// place one by one point in its place in populatedTree arrays				
+		int totalPoints = this.pointIDs.length;
+		
+		int[] populatedBinIDs = new int[totalPoints];
+		int[] populatedPointIDs = new int[totalPoints];
+		int[] populatedImageIDs = new int[totalPoints];
+		
+		// each cell gives where exactly we got with filling this bin
+		int[] counter = new int[binCounts.size()];	//index in counter corresponds to binID
+		
+		for(int i = 0; i < totalPoints; i++)
+		{								
+			int bin = this.binIDs[i];	
+			
+			CountIndexPair pair = binCounts.get(bin);
+			int index = pair.getIndex();	// this is the index of first element of this bin ('bins' vector)
+			
+			// the index where the next element goes is index+counter[bin]
+			int nextElSlot = index + counter[bin];
+			
+			counter[bin]++;
+			
+			populatedBinIDs[nextElSlot] = this.binIDs[i];											
+			populatedPointIDs[nextElSlot] = this.pointIDs[i];
+			populatedImageIDs[nextElSlot] = this.imageIDs[i];
+		
+		}
 	}
 }

@@ -362,7 +362,37 @@ public class KDTree
 		KDLeaf leafNeighbour = (KDLeaf)tree.get(index);		
 		
 		return leafNeighbour;		
-	}		
+	}	
+	
+	/**
+	 * This method takes a query point and returns the a leaf node 
+	 * that contain points close to it i.e. in the same bin with it.
+	 * @param tree
+	 * @param dataSetPopulating
+	 * @param keyptStart
+	 * @return
+	 */
+	public KDLeaf nearestBin(Vector trainedTree, short[] pointData)
+	{						
+		int index = 0;
+		while(trainedTree.get(index) instanceof KDNode)
+		{
+			KDNode innerNode = (KDNode)trainedTree.get(index);
+			int splitDim = innerNode.getDimension();
+			double splitPt = innerNode.getSplitPt();
+			
+			if(pointData[splitDim] < splitPt)		// left of splitting place
+			{
+				index = innerNode.getLeftChild();
+			}else
+			{
+				index = innerNode.getRightChild();
+			}
+		}
+		KDLeaf leafNeighbour = (KDLeaf)trainedTree.get(index);		
+		
+		return leafNeighbour;		
+	}
 	
 	
 	
@@ -606,6 +636,56 @@ public class KDTree
 	return populatedTree;
 }
 
+	
+	
+	/**
+	 * TO DO	 
+	 */
+	
+	
+	public int populateKDTreePerImage(Vector trainedTree, PopulatedKDTree populatedTree, short[] imageDataSet, int imageID, int currPos,
+			Vector<CountIndexPair> binCounts)
+	{
+		
+		// populatedTree object holds three arrays - these are the points ordered by the bins to which they belong -
+		// points are represented as elements of the three arrays - first array gives the binID where the point belongs,
+		// the second one the imageID where the point is coming from and the third one the pointID
+		// (each point is as triples binID-imageID-pointID , where each element comes from one of the three arrays)
+			
+		// the number of points in each bin and the index of first point of each bin are given in the 'counts' vector 'bin' 
+		
+		// total points in this image
+		int totalPts = imageDataSet.length / Keypoint.DESCRIPTOR_LENGTH;
+		
+		for(int pointID = 0; pointID < totalPts; pointID++)
+		{
+			KDLeaf leaf = this.nearestBin(trainedTree, imageDataSet);
+			int binID = leaf.getBinIDMapping();
+			
+			// put the three values in the populatedTree arrays
+			populatedTree.setImageID(currPos, imageID);
+			populatedTree.setPointID(currPos, pointID);
+			populatedTree.setBinID(currPos, binID);
+			currPos++;
+
+			// get the count-index pair in this bin and increment its count
+			CountIndexPair pair = binCounts.get(binID);
+			pair.incrementCount();
+			
+		}
+		
+		// Done iterating through all images and all keypoints - 
+		// iterate through the 'counts' vector and set the indeces of first elements for each bin
+		int firstElIndx = 0;
+		for(int i = 0; i < binCounts.size(); i++)
+		{
+			CountIndexPair pair = binCounts.get(i);
+			pair.setIndex(firstElIndx);
+			firstElIndx = firstElIndx + pair.getCount();			
+		}
+		
+		return currPos;
+}
 	
 	/**
 	 * This method takes a keypoint and queries the trained tree with it.
