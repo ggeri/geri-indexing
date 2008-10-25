@@ -826,7 +826,7 @@ public class ImageKeypointPairs implements Serializable
 			magn = Math.sqrt(magn);
 			for(int j = 0; j < desc.length; j++)
 			{
-				desc[j] = (short) (Math.floor(desc[j] / magn) * Short.MAX_VALUE);
+				desc[j] = (short) Math.floor((desc[j] / magn) * Short.MAX_VALUE);
 			}
 			keyptPair.setDescriptor(desc);
 		}

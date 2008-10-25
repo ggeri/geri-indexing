@@ -194,7 +194,7 @@ public class KDTree
 			// get the difference
 			int diff = dimMax - dimMin;
 			
-			System.out.println("dimMax, dimMin and diff: " + dimMax + dimMin + diff);
+			//System.out.println("dimMax, dimMin and diff: " + dimMax + " " + dimMin + " " + diff);
 			
 			// check against biggest difference so far
 			if (diff > maxDiff)
@@ -518,7 +518,7 @@ public class KDTree
 		
 		// populate 'counts' vector in advance
 		int numBins = this.mapLeafsToBins(trainedTree);
-		System.out.println("Number of bins (leaf nodes) in this tree " + numBins + "\n");
+		// System.out.println("Number of bins (leaf nodes) in this tree " + numBins + "\n");
 		for(int k = 0; k < numBins; k++)
 		{
 			CountIndexPair pair = new CountIndexPair();
@@ -726,16 +726,21 @@ public class KDTree
 	 * element at index i represents the image with imageID = i.
 	 * It also opens the file with name outputFileName and adds to it the info about retrieved bins, imgs, pt indeces
 	 */	
-	public void voteForPointWithGroundTruth(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
+	public void voteForPointWithGroundTruth(Vector<Node> trainedTree, PopulatedKDTree populatedTree, int queryImageID,
 			Keypoint queryPoint, int queryPtID, Vector<CountIndexPair> counts, double[] votes, BufferedWriter writer)
 	{				
 		// threshold for max distance between this query pt and points that we consider close enough
-		double threshold = 0.7396;
+		// this threshold is squared since that is how we use it in KD-tree
+		// threshold=0.86 so (0.86*max-short)^2
+		// The threshold for KD-tree distance also has to be scaled to 
+		// short range as the features descriptor values.
+		double threshold = (0.35 * Short.MAX_VALUE) * (0.35 * Short.MAX_VALUE);
 		// threshold on number of bins we want to look into to find reasonably close points to this query point
 		int maxBins = IndexingGroundTruthTest2.NUM_LEAFS_IN_TRAINED_TREE; // we don't want to limit the number of bins
 		
-		// get all the bins tha contain points 'reasonably' close to the query point		
-		Vector<Integer> binIDs = this.bestBinFirst(trainedTree, new double[maxBins], queryPoint, threshold, maxBins);
+		// get all the bins tha contain points 'reasonably' close to the query point	
+		double[] distances = new double[maxBins];
+		Vector<Integer> binIDs = this.bestBinFirst(trainedTree, distances, queryPoint, threshold, maxBins);
 		
 		// Calculate how many points in total (accross all bins) did we retrieve
 		int totalPts = 0;
@@ -750,6 +755,7 @@ public class KDTree
 		int[] bins = new int[totalPts];
 		int[] points = new int[totalPts];
 		int[] images = new int[totalPts];
+		double[] dists = new double[totalPts];
 		int gtPos = 0;
 		
 		// iterate over all returned bins (the bins with 'close' points)				
@@ -785,9 +791,16 @@ public class KDTree
 				bins[gtPos] = populatedTree.getBinIDs()[j];
 				points[gtPos] = populatedTree.getPointIDs()[j];
 				images[gtPos] = populatedTree.getImageIDs()[j];
+				// We record distances for each point even though the
+				// the distances for points in the same bin are the same
+				// Also the distance returned by best-bin-first is squared and it is claculated from the
+				// points that were normalized and scaled to short space - so I will scale them back to 
+				// double space by dividing them by Short.MAX^2 AND I will leave them squared.
+				dists[gtPos] = distances[i] / (Short.MAX_VALUE * Short.MAX_VALUE); 
 				gtPos++;
 			}			
 		}
+
 		
 		if(gtPos != totalPts) 
 		{
@@ -797,36 +810,43 @@ public class KDTree
 				System.out.println(e.getMessage());
 			}
 		}
+
 		
-		String binsString = "";
-		String pointsString = "";
-		String imagesString = "";
-		for(int i = 0; i < bins.length; i++) 
-		{
-			binsString = binsString + bins[i] + " ";
-		}
-		for(int i = 0; i < points.length; i++) 
-		{
-			pointsString = pointsString + points[i] + " ";
-		}
-		for(int i = 0; i < images.length; i++) 
-		{
-			imagesString = imagesString + images[i] + " ";
-		}
+//		System.out.println("Writing to the file the following info:");
+//		System.out.println(queryImageID);
+//		System.out.println(queryPtID);
+//		System.out.println(binIDs.size());
+//		System.out.println(points.length);		
 		
 		try {
-			writer.write(queryPtID); // query point that is used for this query
-			writer.write("\n");
-			writer.write(binIDs.size()); // how many bins are retrieved by this query
-			writer.write("\n");
-			writer.write(points.length); // how many points are retrieved by this query
-			writer.write("\n");
-			writer.write(binsString);
-			writer.write("\n");
-			writer.write(pointsString);
-			writer.write("\n");
-			writer.write(imagesString);
-			writer.write("\n");
+			writer.write("" + queryImageID); // query image that is used for this query
+			writer.newLine();
+			writer.write("" + queryPtID); // query point that is used for this query
+			writer.newLine();
+			writer.write("" + binIDs.size()); // how many bins are retrieved by this query
+			writer.newLine();
+			writer.write("" + points.length); // how many points are retrieved by this query
+			writer.newLine();
+			for(int i = 0; i < bins.length; i++) 
+			{
+				writer.write(bins[i] + " ");
+			}
+			writer.newLine();
+			for(int i = 0; i < points.length; i++) 
+			{
+				writer.write(points[i] + " ");
+			}
+			writer.newLine();
+			for(int i = 0; i < images.length; i++) 
+			{
+				writer.write(images[i] + " ");
+			}
+			writer.newLine();
+			for(int i = 0; i < dists.length; i++)
+			{
+				writer.write(dists[i] + " ");
+			}
+			writer.newLine();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -1312,7 +1332,7 @@ public class KDTree
 	 * method that for each point writes some info to a file (one file per image).
 	 */	
 	public double[] voteForImageWithGroundTruth(Vector<Node> trainedTree, PopulatedKDTree populatedTree,
-			Vector<CountIndexPair> counts, String imageFileName, int numOfImages)
+			Vector<CountIndexPair> counts, String imageFileName, int queryPtID, int numOfImages, BufferedWriter writer)
 	{
 		double[] votes = new double[numOfImages];
 		
@@ -1339,44 +1359,58 @@ public class KDTree
 			ImageKeypointPairs imageKeyptPairs;
 			Keypoint[] keyptArr;			
 			
-			String imageNum;
+			String queryImageID = null;
 			
 			// get the all the keypoints or all the keypoint pairs 
 			// (depending on if it is .obj or .pair.obj file) from this image
 			if(imageFileName.endsWith(".pair.obj"))
-			{				
+			{								
 				imageKeyptPairs = (ImageKeypointPairs)in.readObject();
 				imageKeyptPairs.normalizeKeypointPairs();
 				keyptArr = imageKeyptPairs.getKeyptPairArray();
-				imageNum = imageFileName.substring(imageFileName.length() - 1 - 8 - 5, 
+				queryImageID = imageFileName.substring(imageFileName.length() - 1 - 8 - 5, 
 						imageFileName.length() - 1 - 8);
 			}else
-			{				
+			{								
 				imageKeypts = (ImageKeypoints)in.readObject();
 				imageKeypts.normalizeKeypoints();
 				keyptArr = imageKeypts.getKeyptArray();
-				imageNum = imageFileName.substring(imageFileName.length() - 1 - 3 - 5, 
+				queryImageID = imageFileName.substring(imageFileName.length() - 1 - 3 - 5, 
 						imageFileName.length() - 1 - 3);
-			}							
+			}		
 			
-			// Info about voting (bins, images, point indeces) for ground truth
-			String outputFileName = "votingInfoIm" + Integer.parseInt(imageNum);
+			//System.out.println("Num points in this image: " + keyptArr.length);
 			
-			// Open the the file named outputFileName and and pass BufferWrite instance when voting for each point			
-			BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName));
+			in.close();
+			
+//			// Info about voting (bins, images, point indeces) for ground truth
+//			//String outputFileName = "votingInfoIm" + Integer.parseInt(imageNum) + ".txt";
+//			String outputFileName = "votingInfo2" + ".txt";
+//			
+//			// Open the the file named outputFileName and and pass BufferWrite instance when voting for each point	
+//			BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName));
 			
 			
 			// vote for each keypoint in this image and write some ground truth info to outputFile
-			for(int queryPtID = 0; queryPtID < keyptArr.length; queryPtID++)
-			{
-				Keypoint queryPoint = keyptArr[queryPtID];
-				this.voteForPointWithGroundTruth(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes, writer);
-			}
+			// write to the file for 3 query points only, count with the couter
+//			int counter = 0;
+//			for(int queryPtID = 0; queryPtID < keyptArr.length; queryPtID++)
+//			{
+//				Keypoint queryPoint = keyptArr[queryPtID];				
+//				counter++;						
+//				this.voteForPointWithGroundTruth(trainedTree, populatedTree, queryPoint, queryPtID, counts, votes, writer);
+//				// done voting and writing - close the writer
+//				if(counter == 2)
+//				{
+//					writer.flush();
+//					writer.close();
+//					System.exit(0);
+//				}
+//			}
 			
-			// done voting and writing - close the writer
-			writer.close();
+			Keypoint queryPoint = keyptArr[queryPtID];									
+			this.voteForPointWithGroundTruth(trainedTree, populatedTree, Integer.parseInt(queryImageID), queryPoint, queryPtID, counts, votes, writer);
 			
-			in.close();
 			
 		}catch (IOException ioe)
 		{
@@ -1408,7 +1442,7 @@ public class KDTree
 		{
 			double dimMin = dataSet[i];	//initialize min to the first element of this dimension
 			// loop over all points and find min
-			for(int j = 0; j < dataSet.length; j = j + Keypoint.DESCRIPTOR_LENGTH)
+			for(int j = i; j < dataSet.length; j = j + Keypoint.DESCRIPTOR_LENGTH)
 			{											
 				if(dataSet[j] < dimMin)
 				{
@@ -1437,8 +1471,8 @@ public class KDTree
 		
 		for (int i = 0; i < Keypoint.DESCRIPTOR_LENGTH; i++)
 		{
-			dimBounds[i] = min - (diff * 0.25);
-			dimBounds[i + Keypoint.DESCRIPTOR_LENGTH] = max + (diff * 0.25);
+			dimBounds[i] = min - (diff * 0.15);
+			dimBounds[i + Keypoint.DESCRIPTOR_LENGTH] = max + (diff * 0.15);
 		}
 		
 		return dimBounds;
