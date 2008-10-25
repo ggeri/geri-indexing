@@ -321,7 +321,7 @@ public class KeypointPairsExtraction
 		short[] dataSet = new short[0];
 		
 		// get the path names from the path class
-		String pairObjFileName = Path.filePairOBJ_3 + "ukbench" + formatter.format(imageNum) + ".pair.obj";
+		String pairObjFileName = Path.filePairOBJ_2 + "ukbench" + formatter.format(imageNum) + ".pair.obj";
 		
 		File pairObjFile = new File(pairObjFileName);		
 		
@@ -329,7 +329,10 @@ public class KeypointPairsExtraction
 		{						
 			ObjectInputStream in = new ObjectInputStream(new
 					BufferedInputStream(new FileInputStream(pairObjFile)));
-			ImageKeypointPairs imageKeyptPairs = (ImageKeypointPairs)in.readObject();	
+			ImageKeypointPairs imageKeyptPairs = (ImageKeypointPairs)in.readObject();
+			
+			// normalize the feature vectors
+			imageKeyptPairs.normalizeKeypointPairs();
 			
 			KeypointPair[] keyptPairArr = imageKeyptPairs.getKeyptPairArray();	
 						

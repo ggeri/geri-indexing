@@ -93,4 +93,15 @@ public class Path
 		"/nobackup/geri/projectImages/method_4_fullDimensionality/pair.mix0.5.key/";
 	public static String filePairMix05OBJ_4 = 
 		"/nobackup/geri/projectImages/method_4_fullDimensionality/pair.mix0.5.objFullDim/";
+	
+	
+///////////////////////////////////////////////////////////////////////////
+	// SOME OTHER PATHS
+	
+	// File name that contains random images and points from the ground truth set that are used to querying
+	public static String randomQueryPtsFileSingl = 
+		"/nobackup/geri/matlab_files/ground_truth/randomPoints.txt";
+	public static String randomQueryPtsFilePair = 
+		"/nobackup/geri/matlab_files/ground_truth/randomPointPairs.txt";
+	
 }
