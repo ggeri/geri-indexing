@@ -816,8 +816,10 @@ public class ImageKeypointPairs implements Serializable
 	{
 		for(int i = 0; i < keyptPairArray.length; i++ )
 		{
-			KeypointPair keyptPair = keyptPairArray[i];
+			KeypointPair keyptPair = keyptPairArray[i];					
+			
 			short[] desc = keyptPair.getDescriptor();
+			
 			double magn = 0;
 			for(int j = 0; j < desc.length; j++)
 			{
@@ -827,7 +829,8 @@ public class ImageKeypointPairs implements Serializable
 			for(int j = 0; j < desc.length; j++)
 			{
 				desc[j] = (short) Math.floor((desc[j] / magn) * Short.MAX_VALUE);
-			}
+			}					
+			
 			keyptPair.setDescriptor(desc);
 		}
 	}
