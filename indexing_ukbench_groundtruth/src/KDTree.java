@@ -831,7 +831,7 @@ public class KDTree
 		// threshold=0.86 so (0.86*max-short)^2
 		// The threshold for KD-tree distance also has to be scaled to 
 		// short range as the features descriptor values.
-		double threshold = (0.35 * Short.MAX_VALUE) * (0.35 * Short.MAX_VALUE);
+		double threshold = (0.4 * Short.MAX_VALUE) * (0.4 * Short.MAX_VALUE);
 		// threshold on number of bins we want to look into to find reasonably close points to this query point
 		int maxBins = IndexingGroundTruthTest2.NUM_LEAFS_IN_TRAINED_TREE; // we don't want to limit the number of bins
 		
