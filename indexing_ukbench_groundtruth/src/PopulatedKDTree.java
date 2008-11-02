@@ -78,6 +78,9 @@ public class PopulatedKDTree {
 		this.imageIDs[position] = imageIDValue;
 	}
 	
+	/*
+	 * Sorts points in this populated tree by binID for easier voting later.
+	 */
 	public void sortPointsByBinID(Vector<CountIndexPair> binCounts) 
 	{
 		// place one by one point in its place in populatedTree arrays				
