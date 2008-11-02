@@ -639,9 +639,26 @@ public class KDTree
 	
 	
 	/**
-	 * TO DO	 
+	 * A new new version of the populateKDTree method which avoids gathering all the points for populating at once.
+	 * This method is called per image from the IndexingPairsTest1 to populate the tree one image at a time.
+	 * 
+	 * We still represent the populated tree with three arrays of ints. The size of all three arrays is
+	 * the same - it is set to the number of points in the database - we get this number by using matlab to count them.
+	 * First array holds all the binIDs, second one holds all the pointIDs and the third one 
+	 * holds all the imageIDs. Combination of three cells (one from each array) with the same index
+	 * will represent one element in the populated tree.	
+	 * 
+	 * The imageIndeces array is also passed to the method - it gives the indeces of 1st element
+	 * of each image in this big dataSetPopulating array.	
+	 * trainedTree - trained tree that is to be populated
+	 * populatedTree - the tree to populate with points from this image
+	 * imageDataSet - points from this image - they are to be put into the tree
+	 * imageID - id of the image that we are currently populating with
+	 * currPos - where did we stop with populating in this tree
+	 * binCounts - this array consists of CountIndexPair elements - it contains as many of those elements as there 
+	 * is bins in the tree. Each CountIndexPair (one per bin) gives count - number of points in this bin, and index - 
+	 * index of the first point of this bin - it is used later for voting 
 	 */
-	
 	
 	public int populateKDTreePerImage(Vector trainedTree, PopulatedKDTree populatedTree, short[] imageDataSet, int imageID, int currPos,
 			Vector<CountIndexPair> binCounts)
